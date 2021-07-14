@@ -1,0 +1,94 @@
+body {
+  background: hsl(293, 73%, 38%) !important;
+}
+
+.pocn-icon {
+  color: #fff;
+  text-align: center;
+  font-size: 45pt;
+  font-weight: bolder;
+  padding: 0;
+  margin-bottom: 3px;
+}
+
+.pocn-brand {
+  color: #fff;
+  text-align: center;
+  font-size: 15pt;
+}
+
+.wrapper {
+  margin-top: 100px;
+  margin-bottom: 80px;
+}
+
+.form-signin {
+  max-width: 380px;
+  padding: 15px 35px 45px;
+  margin: 0 auto;
+  opacity: 1;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 30px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.btn-pocn {
+  color: #fff;
+  background-color: hsl(293, 73%, 40%);
+  border: 3px solid;
+  border-radius: 0;
+  border-color: #fff;
+  margin: 10px 10px 10px 0px;
+}
+
+.btn-pocn:hover {
+  color: hsl(293, 73%, 40%);
+  background-color: #fff;
+  border: 3px solid;
+  border-radius: 0;
+  border-color: hsl(293, 73%, 40%);
+  margin: 10px 10px 10px 0px;
+}
+
+footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    font-size: 12pt;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-monitor {
+  max-width: 480px;
+  padding: 0px;
+  margin: 0 auto;
+  opacity: 1;
+}
