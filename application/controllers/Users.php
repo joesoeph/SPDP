@@ -6,12 +6,14 @@ if (!defined('BASEPATH'))
 class Users extends Parent_Controller
 {
 
+	protected $arrAccessMenu;
 
     function __construct()
     {
         parent::__construct();
         $this->load->model('Users_model');
         $this->load->library('form_validation');
+		$this->arrAccessMenu = $this->session->userdata('access_menu')[6];
     }
 
     public function index()
@@ -235,21 +237,28 @@ class Users extends Parent_Controller
         }
     }
 
-    public function delete($id)
+    public function delete($Id)
     {
-      $this->_rules();
+      if($this->arrAccessMenu['Delete']){
+        $row = $this->Users_model->get_by_id($Id);
 
-      if ($this->form_validation->run() == FALSE) {
-          $this->update($this->input->post('$id', TRUE));
-      } else {
+        if ($row) {
           $data = array(
-                    'LastChangedDate' => date('Y-m-d H:i:s'),
-                    'LastChangedByUserId' => $this->session->userdata('user_id')
-                  );
+            'DeletedDate' => date('Y-m-d H:i:s'),
+            'DeletedUserId' => $this->session->userdata('user_id')
+          );
 
-          $this->users_model->update($id, $data);
-          $this->session->set_flashdata('message', 'Data diperbarui');
-          redirect(site_url('users'));
+          $this->Users_model->update($row->id, $data);
+
+          $this->session->set_flashdata('message', 'Data telah dihapus');
+          redirect(site_url('Users'));
+        } else {
+          $this->session->set_flashdata('message', 'Data tidak ditemukan');
+          redirect(site_url('Users'));
+        }
+      } else {
+        $this->session->set_flashdata('message', 'Anda tidak punya akses');
+        redirect(site_url('Users'));
       }
     }
 

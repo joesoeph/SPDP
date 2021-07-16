@@ -55,7 +55,7 @@ class Refund extends Parent_Controller
               'button' => '',
               'action' => set_value('Refund/create_action'),
           		'RefundId' => $row->RefundId,
-							'BudgetRequestId' => $row->BudgetRequestId,
+							'ProofSpendId' => $row->ProofSpendId,
 							'RefundNo' => $row->RefundNo,
 							'RefundDate' => $row->RefundDate,
 							'NoUrut' => $row->NoUrut,
@@ -136,7 +136,7 @@ class Refund extends Parent_Controller
             'action' => site_url('Refund/create_action/'),
             'attribute' => '',
 						'RefundId' => set_value('RefundId'),
-						'BudgetRequestId' => set_value('RefundId'),
+						'ProofSpendId' => set_value('ProofSpendId'),
 						'RefundDate' => set_value('RefundDate'),
 						'NoUrut' => set_value('NoUrut', $NoUrut),
 						'RefundNo' => set_value('RefundNo', $RefundNo),
@@ -168,7 +168,7 @@ class Refund extends Parent_Controller
 						'DeletedUserId' => set_value('DeletedUserId')
         );
 
-        $Datas['DataBudgetRequest'] = $this->Refund_model->budgetRequestSelected();
+        $Datas['DataProofSpend'] = $this->Refund_model->proofSpendSelected();
         $Datas['DataApproval1'] = $this->Refund_model->approval1Selected();
         $Datas['DataApproval2'] = $this->Refund_model->approval2Selected();
         $Datas['DataApproval3'] = $this->Refund_model->approval3Selected();
@@ -198,7 +198,7 @@ class Refund extends Parent_Controller
             'action' => site_url('Refund/update_action/'.$Id),
             'attribute' => $disabled,
 						'RefundId' => set_value('RefundId', $Id),
-						'BudgetRequestId' => set_value('RefundId', $row->BudgetRequestId),
+						'ProofSpendId' => set_value('ProofSpendId', $row->ProofSpendId),
 						'RefundDate' => set_value('RefundDate', $row->RefundDate),
 						'NoUrut' => set_value('NoUrut', $row->NoUrut),
 						'RefundNo' => set_value('RefundNo', $row->RefundNo),
@@ -230,7 +230,7 @@ class Refund extends Parent_Controller
 						'DeletedUserId' => set_value('DeletedUserId', $row->DeletedUserId),
           );
 
-					$Datas['DataBudgetRequest'] = $this->Refund_model->budgetRequestSelected($Id);
+					$Datas['DataProofSpend'] = $this->Refund_model->proofSpendSelected($Id);
 					$Datas['DataApproval1'] = $this->Refund_model->approval1Selected($Id);
           $Datas['DataApproval2'] = $this->Refund_model->approval2Selected($Id);
           $Datas['DataApproval3'] = $this->Refund_model->approval3Selected($Id);
@@ -254,7 +254,7 @@ class Refund extends Parent_Controller
             $RefundId = uniqid().uniqid();
             $data = array(
               'RefundId' => $RefundId,
-							'BudgetRequestId' => $this->input->post('BudgetRequestId', TRUE),
+							'ProofSpendId' => $this->input->post('ProofSpendId', TRUE),
 							'RefundDate' => $this->input->post('RefundDate', TRUE),
 							'NoUrut' => $this->input->post('NoUrut', TRUE),
 							'RefundNo' => $this->input->post('RefundNo', TRUE),
@@ -310,7 +310,7 @@ class Refund extends Parent_Controller
       if($this->arrAccessMenu['Update']){
         $data = array(
 					'RefundId' => $Id,
-					'BudgetRequestId' => $this->input->post('BudgetRequestId', TRUE),
+					'ProofSpendId' => $this->input->post('ProofSpendId', TRUE),
 					'RefundDate' => $this->input->post('RefundDate', TRUE),
 					'NoUrut' => $this->input->post('NoUrut', TRUE),
 					'RefundNo' => $this->input->post('RefundNo', TRUE),
@@ -542,7 +542,7 @@ class Refund extends Parent_Controller
       //   Informasi PO baru dengan No. ".$data->PoNo." diminta untuk direvisi oleh approver $Approval.
       // ";
       // $this->_send_email($to, $set_message, $subject);
-      $this->GlobalModel->globalUpdate('trnbudgetrequest', array('BudgetRequestId' => $Id), array('LockDate' => NULL));
+      $this->GlobalModel->globalUpdate('trnrefund', array('RefundId' => $Id), array('LockDate' => NULL));
       // $this->Refund_model->setNullRequestSppPoById($Id);
       // send email
     }
@@ -568,12 +568,12 @@ class Refund extends Parent_Controller
     if(!$this->arrAccessMenu['Update']){
       $this->session->set_flashdata('message', 'Anda tidak punya akses');
     } else {
-      $BudgetRequestId = $this->input->post('Id', TRUE);
+      $ProofSpendId = $this->input->post('Id', TRUE);
       $data = array(
         'LockDate' => date("Y-m-d H:i:s"),
         'LockByUserId' => $this->session->userdata('user_id')
       );
-      $res = $this->Refund_model->update($BudgetRequestId, $data);
+      $res = $this->Refund_model->update($ProofSpendId, $data);
 
       // // send email
       // $data    = $this->Refund_model->get_po_by_id($BudgetRequestId);

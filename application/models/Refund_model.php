@@ -104,11 +104,11 @@ class Refund_model extends CI_Model
       return $this->db->query($sql)->row();
     }
 
-    function budgetRequestSelected($id = NULL)
+    function proofSpendSelected($id = NULL)
 		{
-      $sql = "SELECT a.BudgetRequestId, a.BudgetRequestNo, CASE WHEN (b.BudgetRequestId IS NOT NULL) THEN \"selected = 'selected'\" ELSE 'null' END AS selected
-              FROM trnbudgetrequest a LEFT JOIN (SELECT BudgetRequestId
-              FROM $this->table WHERE $this->id = '$id') b ON a.BudgetRequestId = b.BudgetRequestId
+      $sql = "SELECT a.ProofSpendId, a.ProofSpendNo, CASE WHEN (b.ProofSpendId IS NOT NULL) THEN \"selected = 'selected'\" ELSE 'null' END AS selected
+              FROM trnproofspend a LEFT JOIN (SELECT ProofSpendId
+              FROM $this->table WHERE $this->id = '$id') b ON a.ProofSpendId = b.ProofSpendId
               WHERE a.DeletedDate IS NULL 
 							AND a.Approval1Status = '1'  
 							AND a.Approval2Status = '1' ";

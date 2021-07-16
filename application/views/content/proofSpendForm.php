@@ -1,10 +1,18 @@
+<?php
+$recipientTtdDisplay = 'none';
+$creatorTtdDisplay = 'none';
+$approval1TtdDisplay = 'none';
+$approval2TtdDisplay = 'none';
+$approval3TtdDisplay = 'none';
+$approvalDoneDisplay = 'none';
+?>
 <!-- Main content -->
 <div id='page-content-wrapper'>
   <div class="row">
     <div class="col-md-12">
         <!--breadcrumbs start -->
         <ul class="breadcrumb">
-            <li class="active">Pengajuan Dana (A-03)</li>
+            <li class="active">Bukti Pengeluaran Kas (A-03)</li>
         </ul>
         <!--breadcrumbs end -->
     </div>
@@ -13,7 +21,7 @@
     <div class='row'>
       <div class="pane pane-purple">
         <div class="panel-heading">
-          <b>Form Pengajuan Dana (A-03)</b>
+          <b>Form Bukti Pengeluaran Kas (A-03)</b>
         </div>
         <div class="panel-body">
           <div class='col-xs-12'>
@@ -224,84 +232,10 @@
 								<?php
 									if($ArrData['ProofSpendId'] && $ArrData['LockDate'] == NULL) {
 										if($ArrData['Recipient'] == $this->session->userdata('user_id')) {
-								?>
-											<div class="col-md-6">
-												<div class="pane" style="background-color:#F6F6F6;">
-													<div class="panel-heading"><b>Penerima</b></div>
-													<div class="panel-body">
-														<div class='box box-primary'>
-															<div class="row">
-																<div class="col-md-12">
-																	<div id="signature-pad-recipient" class="m-signature-pad">
-																		<div class="m-signature-pad--body">
-																			<input type="hidden" id="ttdValuerecipient" value="<?=$ArrData['RecipientTtd']?>">
-																			<img src="<?=$ArrData['RecipientTtd']?>" width="100%" id="ttdImagerecipient">
-																			<canvas></canvas>
-																		</div>
-																		<div class="m-signature-pad--footer">
-																			<div class="description">Tanda tangan</div>
-																			<div class="description" id="MessageTtdrecipient"></div>
-																			<div class="left">
-																				<button type="button" class="button clear" data-action="clear">
-																					<i class="glyphicon glyphicon-trash"></i>
-																					Kosongkan TTD
-																				</button>
-																			</div>
-																			<div class="right">
-																				<button type="button" class="button save" data-action="save-png"  onclick="saveTtdNonApproval('<?=$ArrData['ProofSpendId']?>', 'recipient')">
-																					<i class="glyphicon glyphicon-floppy-disk"></i>
-																					Simpan TTD
-																				</button>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-								<?php
+											$recipientTtdDisplay = 'block';
 										}
 										if($ArrData['CreatedByUserId'] == $this->session->userdata('user_id')) {
-								?>
-											<div class="col-md-6">
-												<div class="pane" style="background-color:#F6F6F6;">
-													<div class="panel-heading"><b>Pembuat</b></div>
-													<div class="panel-body">
-														<div class='box box-primary'>
-															<div class="row">
-																<div class="col-md-12">
-																	<div id="signature-pad-creator" class="m-signature-pad">
-																		<div class="m-signature-pad--body">
-																			<input type="hidden" id="ttdValuecreator" value="<?=$ArrData['CreatorTtd']?>">
-																			<img src="<?=$ArrData['CreatorTtd']?>" width="100%" id="ttdImagecreator">
-																			<canvas></canvas>
-																		</div>
-																		<div class="m-signature-pad--footer">
-																			<div class="description">Tanda tangan</div>
-																			<div class="description" id="MessageTtdcreator"></div>
-																			<div class="left">
-																				<button type="button" class="button clear" data-action="clear">
-																					<i class="glyphicon glyphicon-trash"></i>
-																					Kosongkan TTD
-																				</button>
-																			</div>
-																			<div class="right">
-																				<button type="button" class="button save" data-action="save-png"  onclick="saveTtdNonApproval('<?=$ArrData['ProofSpendId']?>', 'creator')">
-																					<i class="glyphicon glyphicon-floppy-disk"></i>
-																					Simpan TTD
-																				</button>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-								<?php
+											$creatorTtdDisplay = 'block';
 										}
 									}
 								?>
@@ -309,327 +243,400 @@
                 <?php 
                 if ($ArrData['ProofSpendId'] && $ArrData['LockDate'] != NULL) {
 									if($ArrData['Approval1'] == $this->session->userdata('user_id') && ((!$ArrData['Approval1Status'] || !$ArrData['Approval2Status'] || !$ArrData['Approval3Status'] || $ArrData['Approval1Status'] == 3 || $ArrData['Approval2Status'] == 3 || $ArrData['Approval3Status'] == 3))){
-										?>
-										<div class="col-md-6">
-											<div class="pane" style="background-color:#F6F6F6;">
-												<div class="panel-heading"><b>Approver 1</b></div>
-												<div class="panel-body">
-													<div class='box box-primary'>
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Status :</label>
-																	<div class='col-md-4'>
-																		<select class="selectpicker" name="Approval1Status" id="Approval1Status" data-show-subtext="false" data-live-search="false" data-width="100%">
-																			<option value="0" <?=($ArrData['Approval1Status'] == 0 ? "selected" : "")?>>Menunggu</option>
-																			<option value="1" <?=($ArrData['Approval1Status'] == 1 ? "selected" : "")?>>Terima</option>
-																			<option value="2" <?=($ArrData['Approval1Status'] == 2 ? "selected" : "")?>>Tolak</option>
-																			<option value="3" <?=($ArrData['Approval1Status'] == 3 ? "selected" : "")?>>Revisi</option>
-																		</select>
-																	</div>
-																</div>
-															</div>
-														</div>
-		
-														<div class="row" style="margin-top: 10px;">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Catatan :</label>
-																	<div class='col-md-9'>
-																		<textarea class="form-control" name="Approval1Note" id="Approval1Note"><?=$ArrData['Approval1Note']?></textarea>
-																	</div>
-																</div>
-															</div>
-														</div>
-		
-														<div class="row">
-															<div class="col-md-12">
-																<div id="signature-pad-1" class="m-signature-pad">
-																	<div class="m-signature-pad--body">
-																		<input type="hidden" id="ttdValue1" value="<?=$ArrData['Approval1Ttd']?>">
-																		<img src="<?=$ArrData['Approval1Ttd']?>" width="100%" id="ttdImage1">
-																		<canvas></canvas>
-																	</div>
-																	<div class="m-signature-pad--footer">
-																		<div class="description">Tanda tangan</div>
-																		<div class="description" id="MessageTtd1"></div>
-																		<div class="left">
-																			<button type="button" class="button clear" data-action="clear">
-																				<i class="glyphicon glyphicon-trash"></i>
-																				Kosongkan TTD
-																			</button>
-																		</div>
-																		<div class="right">
-																			<button type="button" class="button save" data-action="save-png"  onclick="saveTtd('<?=$ArrData['ProofSpendId']?>', 1)">
-																				<i class="glyphicon glyphicon-floppy-disk"></i>
-																				Verifikasi
-																			</button>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<!-- verifikasi status spp -->
-													</div>
-												</div>
-											</div>
-										</div>
-									<?php 
+											$approval1TtdDisplay = 'block';
 									} // if($ArrData['Approval1'] == $this->session->userdata('user_id') && ((!$ArrData['Approval1Status'] || !$ArrData['Approval2Status'] || $ArrData['Approval1Status'] == 3 || $ArrData['Approval2Status'] == 3)))
 									
 									if ($ArrData['Approval2'] == $this->session->userdata('user_id') && ((!$ArrData['Approval1Status'] || !$ArrData['Approval2Status'] || !$ArrData['Approval3Status'] || $ArrData['Approval1Status'] == 3 || $ArrData['Approval2Status'] == 3 || $ArrData['Approval3Status'] == 3))){
-									?>
-										<div class="col-md-6">
-											<div class="pane" style="background-color:#F6F6F6;">
-												<div class="panel-heading"><b>Approver 2</b></div>
-												<div class="panel-body">
-													<div class='box box-primary'>
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Status :</label>
-																	<div class='col-md-4'>
-																		<select class="selectpicker" name="Approval2Status" id="Approval2Status" data-show-subtext="false" data-live-search="false" data-width="100%">
-																			<option value="0" <?=($ArrData['Approval2Status'] == 0 ? "selected" : "")?>>Menunggu</option>
-																			<option value="1" <?=($ArrData['Approval2Status'] == 1 ? "selected" : "")?>>Terima</option>
-																			<option value="2" <?=($ArrData['Approval2Status'] == 2 ? "selected" : "")?>>Tolak</option>
-																			<option value="3" <?=($ArrData['Approval2Status'] == 3 ? "selected" : "")?>>Revisi</option>
-																		</select>
-																	</div>
-																</div>
-															</div>
-														</div>
-		
-														<div class="row" style="margin-top: 10px;">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Catatan :</label>
-																	<div class='col-md-9'>
-																		<textarea class="form-control" name="Approval2Note" id="Approval2Note"><?=$ArrData['Approval2Note']?></textarea>
-																	</div>
-																</div>
-															</div>
-														</div>
-		
-														<div class="row">
-															<div class="col-md-12">
-																<div id="signature-pad-2" class="m-signature-pad">
-																	<div class="m-signature-pad--body">
-																		<input type="hidden" id="ttdValue2" value="<?=$ArrData['Approval2Ttd']?>">
-																		<img src="<?=$ArrData['Approval2Ttd']?>" width="100%" id="ttdImage1">
-																		<canvas></canvas>
-																	</div>
-																	<div class="m-signature-pad--footer">
-																		<div class="description">Tanda tangan</div>
-																		<div class="description" id="MessageTtd2"></div>
-																		<div class="left">
-																			<button type="button" class="button clear" data-action="clear">
-																				<i class="glyphicon glyphicon-trash"></i>
-																				Kosongkan TTD
-																			</button>
-																		</div>
-																		<div class="right">
-																			<button type="button" class="button save" data-action="save-png" onclick="saveTtd('<?=$ArrData['ProofSpendId']?>', 2)">
-																				<i class="glyphicon glyphicon-floppy-disk"></i>
-																				Verifikasi
-																			</button>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-														
-														<!-- verifikasi status spp -->
-													</div>
-												</div>
-											</div>
-										</div>
-									<?php 
+										$approval2TtdDisplay = 'block';
 									} 
 										if ($ArrData['Approval3'] == $this->session->userdata('user_id') && ((!$ArrData['Approval1Status'] || !$ArrData['Approval2Status'] || !$ArrData['Approval3Status'] || $ArrData['Approval1Status'] == 3 || $ArrData['Approval2Status'] == 3 || $ArrData['Approval3Status'] == 3))){
-										?>
-											<div class="col-md-6">
-												<div class="pane" style="background-color:#F6F6F6;">
-													<div class="panel-heading"><b>Approver 3</b></div>
-													<div class="panel-body">
-														<div class='box box-primary'>
-															<div class="row">
-																<div class="col-md-12">
-																	<div class='form-group'>
-																		<label class="col-md-3 control-label">Status :</label>
-																		<div class='col-md-4'>
-																			<select class="selectpicker" name="Approval3Status" id="Approval3Status" data-show-subtext="false" data-live-search="false" data-width="100%">
-																				<option value="0" <?=($ArrData['Approval3Status'] == 0 ? "selected" : "")?>>Menunggu</option>
-																				<option value="1" <?=($ArrData['Approval3Status'] == 1 ? "selected" : "")?>>Terima</option>
-																				<option value="2" <?=($ArrData['Approval3Status'] == 2 ? "selected" : "")?>>Tolak</option>
-																				<option value="3" <?=($ArrData['Approval3Status'] == 3 ? "selected" : "")?>>Revisi</option>
-																			</select>
-																		</div>
-																	</div>
-																</div>
-															</div>
-			
-															<div class="row" style="margin-top: 10px;">
-																<div class="col-md-12">
-																	<div class='form-group'>
-																		<label class="col-md-3 control-label">Catatan :</label>
-																		<div class='col-md-9'>
-																			<textarea class="form-control" name="Approval3Note" id="Approval3Note"><?=$ArrData['Approval3Note']?></textarea>
-																		</div>
-																	</div>
-																</div>
-															</div>
-			
-															<div class="row">
-																<div class="col-md-12">
-																	<div id="signature-pad-3" class="m-signature-pad">
-																		<div class="m-signature-pad--body">
-																			<input type="hidden" id="ttdValue3" value="<?=$ArrData['Approval3Ttd']?>">
-																			<img src="<?=$ArrData['Approval3Ttd']?>" width="100%" id="ttdImage3">
-																			<canvas></canvas>
-																		</div>
-																		<div class="m-signature-pad--footer">
-																			<div class="description">Tanda tangan</div>
-																			<div class="description" id="MessageTtd3"></div>
-																			<div class="left">
-																				<button type="button" class="button clear" data-action="clear">
-																					<i class="glyphicon glyphicon-trash"></i>
-																					Kosongkan TTD
-																				</button>
-																			</div>
-																			<div class="right">
-																				<button type="button" class="button save" data-action="save-png" onclick="saveTtd('<?=$ArrData['ProofSpendId']?>', 3)">
-																					<i class="glyphicon glyphicon-floppy-disk"></i>
-																					Verifikasi
-																				</button>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															
-															<!-- verifikasi status spp -->
-														</div>
-													</div>
-												</div>
-											</div>
-										<?php 
+											$approval3TtdDisplay = 'block'; 
 										}// elseif ($ArrData['Approval2'] == $this->session->userdata('user_id') && ((!$ArrData['Approval1Status'] || !$ArrData['Approval2Status'] || $ArrData['Approval1Status'] == 3 || $ArrData['Approval2Status'] == 3)))
 										
 									if (($ArrData['Approval1Status'] && $ArrData['Approval2Status'] && $ArrData['Approval3Status']) && ($ArrData['Approval1Status'] != 3 && $ArrData['Approval2Status'] != 3 && $ArrData['Approval3Status'] != 3)){
-									?>
-										<div class="col-md-4">
-											<div class="pane" style="background-color:#F6F6F6;">
-												<div class="panel-heading"><b>Approver 1</b></div>
-												<div class="panel-body">
-													<div class='box box-primary'>
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Status :</label>
-																	<div class='col-md-4'>
-																		<select class="selectpicker" name="Approval1Status" id="Approval1Status" data-show-subtext="false" data-live-search="false" data-width="100%" disabled>
-																			<option value="0" <?=($ArrData['Approval1Status'] == 0 ? "selected" : "")?>>Menunggu</option>
-																			<option value="1" <?=($ArrData['Approval1Status'] == 1 ? "selected" : "")?>>Terima</option>
-																			<option value="2" <?=($ArrData['Approval1Status'] == 2 ? "selected" : "")?>>Tolak</option>
-																			<option value="3" <?=($ArrData['Approval1Status'] == 3 ? "selected" : "")?>>Revisi</option>
-																		</select>
-																	</div>
-																</div>
-															</div>
-														</div>
-														
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Catatan :</label>
-																	<div class='col-md-9'>
-																		<textarea class="form-control" name="Approval1Note" id="Approval1Note" disabled><?=$ArrData['Approval1Note']?></textarea>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<!-- verifikasi status invoice -->
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="pane" style="background-color:#F6F6F6;">
-												<div class="panel-heading"><b>Approver 2</b></div>
-												<div class="panel-body">
-													<div class='box box-primary'>
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Status :</label>
-																	<div class='col-md-4'>
-																		<select class="selectpicker" name="Approval2Status" id="Approval2Status" data-show-subtext="false" data-live-search="false" data-width="100%" disabled>
-																			<option value="0" <?=($ArrData['Approval2Status'] == 0 ? "selected" : "")?>>Menunggu</option>
-																			<option value="1" <?=($ArrData['Approval2Status'] == 1 ? "selected" : "")?>>Terima</option>
-																			<option value="2" <?=($ArrData['Approval2Status'] == 2 ? "selected" : "")?>>Tolak</option>
-																			<option value="3" <?=($ArrData['Approval2Status'] == 3 ? "selected" : "")?>>Revisi</option>
-																		</select>
-																	</div>
-																</div>
-															</div>
-														</div>
-														
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Catatan :</label>
-																	<div class='col-md-9'>
-																		<textarea class="form-control" name="Approval2Note" id="Approval2Note" disabled><?=$ArrData['Approval2Note']?></textarea>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<!-- verifikasi status invoice -->
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="pane" style="background-color:#F6F6F6;">
-												<div class="panel-heading"><b>Approver 3</b></div>
-												<div class="panel-body">
-													<div class='box box-primary'>
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Status :</label>
-																	<div class='col-md-4'>
-																		<select class="selectpicker" name="Approval3Status" id="Approval3Status" data-show-subtext="false" data-live-search="false" data-width="100%" disabled>
-																			<option value="0" <?=($ArrData['Approval3Status'] == 0 ? "selected" : "")?>>Menunggu</option>
-																			<option value="1" <?=($ArrData['Approval3Status'] == 1 ? "selected" : "")?>>Terima</option>
-																			<option value="2" <?=($ArrData['Approval3Status'] == 2 ? "selected" : "")?>>Tolak</option>
-																			<option value="3" <?=($ArrData['Approval3Status'] == 3 ? "selected" : "")?>>Revisi</option>
-																		</select>
-																	</div>
-																</div>
-															</div>
-														</div>
-														
-														<div class="row">
-															<div class="col-md-12">
-																<div class='form-group'>
-																	<label class="col-md-3 control-label">Catatan :</label>
-																	<div class='col-md-9'>
-																		<textarea class="form-control" name="Approval2Note" id="Approval2Note" disabled><?=$ArrData['Approval2Note']?></textarea>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<!-- verifikasi status invoice -->
-													</div>
-												</div>
-											</div>
-										</div>
-								<?php 
+										$approvalDoneDisplay = 'block';
 									} //if (($ArrData['Approval1Status'] && $ArrData['Approval2Status']) && ($ArrData['Approval1Status'] != 3 && $ArrData['Approval2Status'] != 3))
               	} // if ($ArrData['ProofSpendId'] && $ArrData['LockDate'] != NULL)
                 ?>
+								
+								
+								<div class="col-md-6" style="display: <?=$recipientTtdDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Penerima</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div id="signature-pad-recipient" class="m-signature-pad">
+															<div class="m-signature-pad--body">
+																<input type="hidden" id="ttdValuerecipient" value="<?=$ArrData['RecipientTtd']?>">
+																<img src="<?=$ArrData['RecipientTtd']?>" width="100%" id="ttdImagerecipient">
+																<canvas></canvas>
+															</div>
+															<div class="m-signature-pad--footer">
+																<div class="description">Tanda tangan</div>
+																<div class="description" id="MessageTtdrecipient"></div>
+																<div class="left">
+																	<button type="button" class="button clear" data-action="clear">
+																		<i class="glyphicon glyphicon-trash"></i>
+																		Kosongkan TTD
+																	</button>
+																</div>
+																<div class="right">
+																	<button type="button" class="button save" data-action="save-png"  onclick="saveTtdNonApproval('<?=$ArrData['ProofSpendId']?>', 'recipient')">
+																		<i class="glyphicon glyphicon-floppy-disk"></i>
+																		Simpan TTD
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6" style="display: <?=$creatorTtdDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Pembuat</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div id="signature-pad-creator" class="m-signature-pad">
+															<div class="m-signature-pad--body">
+																<input type="hidden" id="ttdValuecreator" value="<?=$ArrData['CreatorTtd']?>">
+																<img src="<?=$ArrData['CreatorTtd']?>" width="100%" id="ttdImagecreator">
+																<canvas></canvas>
+															</div>
+															<div class="m-signature-pad--footer">
+																<div class="description">Tanda tangan</div>
+																<div class="description" id="MessageTtdcreator"></div>
+																<div class="left">
+																	<button type="button" class="button clear" data-action="clear">
+																		<i class="glyphicon glyphicon-trash"></i>
+																		Kosongkan TTD
+																	</button>
+																</div>
+																<div class="right">
+																	<button type="button" class="button save" data-action="save-png"  onclick="saveTtdNonApproval('<?=$ArrData['ProofSpendId']?>', 'creator')">
+																		<i class="glyphicon glyphicon-floppy-disk"></i>
+																		Simpan TTD
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6" style="display: <?=$approval1TtdDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Approver 1</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Status :</label>
+															<div class='col-md-4'>
+																<select class="selectpicker" name="Approval1Status" id="Approval1Status" data-show-subtext="false" data-live-search="false" data-width="100%">
+																	<option value="0" <?=($ArrData['Approval1Status'] == 0 ? "selected" : "")?>>Menunggu</option>
+																	<option value="1" <?=($ArrData['Approval1Status'] == 1 ? "selected" : "")?>>Terima</option>
+																	<option value="2" <?=($ArrData['Approval1Status'] == 2 ? "selected" : "")?>>Tolak</option>
+																	<option value="3" <?=($ArrData['Approval1Status'] == 3 ? "selected" : "")?>>Revisi</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 10px;">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Catatan :</label>
+															<div class='col-md-9'>
+																<textarea class="form-control" name="Approval1Note" id="Approval1Note"><?=$ArrData['Approval1Note']?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-md-12">
+														<div id="signature-pad-1" class="m-signature-pad">
+															<div class="m-signature-pad--body">
+																<input type="hidden" id="ttdValue1" value="<?=$ArrData['Approval1Ttd']?>">
+																<img src="<?=$ArrData['Approval1Ttd']?>" width="100%" id="ttdImage1">
+																<canvas></canvas>
+															</div>
+															<div class="m-signature-pad--footer">
+																<div class="description">Tanda tangan</div>
+																<div class="description" id="MessageTtd1"></div>
+																<div class="left">
+																	<button type="button" class="button clear" data-action="clear">
+																		<i class="glyphicon glyphicon-trash"></i>
+																		Kosongkan TTD
+																	</button>
+																</div>
+																<div class="right">
+																	<button type="button" class="button save" data-action="save-png"  onclick="saveTtd('<?=$ArrData['ProofSpendId']?>', 1)">
+																		<i class="glyphicon glyphicon-floppy-disk"></i>
+																		Verifikasi
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- verifikasi status spp -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6" style="display: <?=$approval2TtdDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Approver 2</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Status :</label>
+															<div class='col-md-4'>
+																<select class="selectpicker" name="Approval2Status" id="Approval2Status" data-show-subtext="false" data-live-search="false" data-width="100%">
+																	<option value="0" <?=($ArrData['Approval2Status'] == 0 ? "selected" : "")?>>Menunggu</option>
+																	<option value="1" <?=($ArrData['Approval2Status'] == 1 ? "selected" : "")?>>Terima</option>
+																	<option value="2" <?=($ArrData['Approval2Status'] == 2 ? "selected" : "")?>>Tolak</option>
+																	<option value="3" <?=($ArrData['Approval2Status'] == 3 ? "selected" : "")?>>Revisi</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 10px;">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Catatan :</label>
+															<div class='col-md-9'>
+																<textarea class="form-control" name="Approval2Note" id="Approval2Note"><?=$ArrData['Approval2Note']?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-md-12">
+														<div id="signature-pad-2" class="m-signature-pad">
+															<div class="m-signature-pad--body">
+																<input type="hidden" id="ttdValue2" value="<?=$ArrData['Approval2Ttd']?>">
+																<img src="<?=$ArrData['Approval2Ttd']?>" width="100%" id="ttdImage1">
+																<canvas></canvas>
+															</div>
+															<div class="m-signature-pad--footer">
+																<div class="description">Tanda tangan</div>
+																<div class="description" id="MessageTtd2"></div>
+																<div class="left">
+																	<button type="button" class="button clear" data-action="clear">
+																		<i class="glyphicon glyphicon-trash"></i>
+																		Kosongkan TTD
+																	</button>
+																</div>
+																<div class="right">
+																	<button type="button" class="button save" data-action="save-png" onclick="saveTtd('<?=$ArrData['ProofSpendId']?>', 2)">
+																		<i class="glyphicon glyphicon-floppy-disk"></i>
+																		Verifikasi
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<!-- verifikasi status spp -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6" style="display: <?=$approval3TtdDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Approver 3</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Status :</label>
+															<div class='col-md-4'>
+																<select class="selectpicker" name="Approval3Status" id="Approval3Status" data-show-subtext="false" data-live-search="false" data-width="100%">
+																	<option value="0" <?=($ArrData['Approval3Status'] == 0 ? "selected" : "")?>>Menunggu</option>
+																	<option value="1" <?=($ArrData['Approval3Status'] == 1 ? "selected" : "")?>>Terima</option>
+																	<option value="2" <?=($ArrData['Approval3Status'] == 2 ? "selected" : "")?>>Tolak</option>
+																	<option value="3" <?=($ArrData['Approval3Status'] == 3 ? "selected" : "")?>>Revisi</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 10px;">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Catatan :</label>
+															<div class='col-md-9'>
+																<textarea class="form-control" name="Approval3Note" id="Approval3Note"><?=$ArrData['Approval3Note']?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-md-12">
+														<div id="signature-pad-2" class="m-signature-pad">
+															<div class="m-signature-pad--body">
+																<input type="hidden" id="ttdValue3" value="<?=$ArrData['Approval3Ttd']?>">
+																<img src="<?=$ArrData['Approval3Ttd']?>" width="100%" id="ttdImage3">
+																<canvas></canvas>
+															</div>
+															<div class="m-signature-pad--footer">
+																<div class="description">Tanda tangan</div>
+																<div class="description" id="MessageTtd3"></div>
+																<div class="left">
+																	<button type="button" class="button clear" data-action="clear">
+																		<i class="glyphicon glyphicon-trash"></i>
+																		Kosongkan TTD
+																	</button>
+																</div>
+																<div class="right">
+																	<button type="button" class="button save" data-action="save-png" onclick="saveTtd('<?=$ArrData['ProofSpendId']?>', 3)">
+																		<i class="glyphicon glyphicon-floppy-disk"></i>
+																		Verifikasi
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<!-- verifikasi status spp -->
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6" style="display: <?=$approvalDoneDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Approver 1</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Status :</label>
+															<div class='col-md-4'>
+																<select class="selectpicker" name="Approval1Status" id="Approval1Status" data-show-subtext="false" data-live-search="false" data-width="100%" disabled>
+																	<option value="0" <?=($ArrData['Approval1Status'] == 0 ? "selected" : "")?>>Menunggu</option>
+																	<option value="1" <?=($ArrData['Approval1Status'] == 1 ? "selected" : "")?>>Terima</option>
+																	<option value="2" <?=($ArrData['Approval1Status'] == 2 ? "selected" : "")?>>Tolak</option>
+																	<option value="3" <?=($ArrData['Approval1Status'] == 3 ? "selected" : "")?>>Revisi</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Catatan :</label>
+															<div class='col-md-9'>
+																<textarea class="form-control" name="Approval1Note" id="Approval1Note" disabled><?=$ArrData['Approval1Note']?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- verifikasi status invoice -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6" style="display: <?=$approvalDoneDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Approver 2</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Status :</label>
+															<div class='col-md-4'>
+																<select class="selectpicker" name="Approval2Status" id="Approval2Status" data-show-subtext="false" data-live-search="false" data-width="100%" disabled>
+																	<option value="0" <?=($ArrData['Approval2Status'] == 0 ? "selected" : "")?>>Menunggu</option>
+																	<option value="1" <?=($ArrData['Approval2Status'] == 1 ? "selected" : "")?>>Terima</option>
+																	<option value="2" <?=($ArrData['Approval2Status'] == 2 ? "selected" : "")?>>Tolak</option>
+																	<option value="3" <?=($ArrData['Approval2Status'] == 3 ? "selected" : "")?>>Revisi</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Catatan :</label>
+															<div class='col-md-9'>
+																<textarea class="form-control" name="Approval2Note" id="Approval2Note" disabled><?=$ArrData['Approval2Note']?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- verifikasi status invoice -->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6" style="display: <?=$approvalDoneDisplay?>;">
+									<div class="pane" style="background-color:#F6F6F6;">
+										<div class="panel-heading"><b>Approver 3</b></div>
+										<div class="panel-body">
+											<div class='box box-primary'>
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Status :</label>
+															<div class='col-md-4'>
+																<select class="selectpicker" name="Approval3Status" id="Approval3Status" data-show-subtext="false" data-live-search="false" data-width="100%" disabled>
+																	<option value="0" <?=($ArrData['Approval3Status'] == 0 ? "selected" : "")?>>Menunggu</option>
+																	<option value="1" <?=($ArrData['Approval3Status'] == 1 ? "selected" : "")?>>Terima</option>
+																	<option value="2" <?=($ArrData['Approval3Status'] == 2 ? "selected" : "")?>>Tolak</option>
+																	<option value="3" <?=($ArrData['Approval3Status'] == 3 ? "selected" : "")?>>Revisi</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row">
+													<div class="col-md-12">
+														<div class='form-group'>
+															<label class="col-md-3 control-label">Catatan :</label>
+															<div class='col-md-9'>
+																<textarea class="form-control" name="Approval3Note" id="Approval3Note" disabled><?=$ArrData['Approval3Note']?></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- verifikasi status invoice -->
+											</div>
+										</div>
+									</div>
+								</div>
+
+
 
                 <div class="row">
                   <div class="col-md-12">

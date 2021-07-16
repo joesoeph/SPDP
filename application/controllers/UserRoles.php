@@ -4,10 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class UserRoles extends Parent_Controller {
 
+	protected $arrAccessMenu;
+	
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model(array('Users_model','ListDataModel','AuthModel'));
+		$this->arrAccessMenu = $this->session->userdata('access_menu')[7];
 	}
 
 	public function index()
@@ -28,7 +31,7 @@ class UserRoles extends Parent_Controller {
 	}
 
 	public function ListData(){
-	    $sql = "SELECT a.* FROM  roles a WHERE a.Active IS NOT NULL";
+	    $sql = "SELECT a.* FROM  roles a WHERE a.Active <> 0";
 
 	    $column_order = array(
 	      'a.RoleName', 
@@ -72,7 +75,7 @@ class UserRoles extends Parent_Controller {
 
         if($id){ // store update
         	$arrAccessMenu = $this->session->userdata('access_menu');
-	        if($arrAccessMenu[31]['Update']){
+	        if($this->arrAccessMenu['Update']){
 	        	if ($this->form_validation->run() == FALSE) {
 		            $msg = 'Data tidak lengkap';
 		        } else {
@@ -101,7 +104,7 @@ class UserRoles extends Parent_Controller {
 	    	}
         }else{ // strore Write new
         	$arrAccessMenu = $this->session->userdata('access_menu');
-	        if($arrAccessMenu[31]['Write']){
+	        if($this->arrAccessMenu['Write']){
 	        	if ($this->form_validation->run() == FALSE) {
 		            $msg = 'Data tidak lengkap';
 		        } else {
@@ -145,15 +148,14 @@ class UserRoles extends Parent_Controller {
     public function Delete($id)
     {
     	$res = FALSE;
-    	$arrAccessMenu = $this->session->userdata('access_menu');
-        if($arrAccessMenu[31]['Delete']){
+        if($this->arrAccessMenu['Delete']){
 	        $row = $this->Users_model->UserRolesById($id);
 	        if ($row) {
 				$data = array(
-						'Active' => 0
-				      );
+				'Active' => 0
+				);
 
-				$this->Users_model->UpdateUserRoles($id, $data);
+				var_dump($this->Users_model->UpdateUserRoles($id, $data)); exit();
 				$msg = 'Data deleted';
 		    	$res = TRUE;
 	        } else {
@@ -163,7 +165,6 @@ class UserRoles extends Parent_Controller {
       		$msg = 'You dont have access delete data';
       	}
     	echo json_encode(array('res' => $res, 'msg' => $msg));
-
     }
 
     function FormModal(){
@@ -235,7 +236,7 @@ class UserRoles extends Parent_Controller {
 		}
 
     	$arrAccessMenu = $this->session->userdata('access_menu');
-        if($arrAccessMenu[31]['Read']){
+        if($this->arrAccessMenu['Read']){
     		echo '
 			<form name="formModal" action="'.$Data['Action'].'" method="post" class="form-horizontal" name="formDivision">
                 <div class="row">
