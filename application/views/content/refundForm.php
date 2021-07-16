@@ -418,7 +418,7 @@ $approvalDoneDisplay = 'none';
 
 												<div class="row">
 													<div class="col-md-12">
-														<div id="signature-pad-2" class="m-signature-pad">
+														<div id="signature-pad-3" class="m-signature-pad">
 															<div class="m-signature-pad--body">
 																<input type="hidden" id="ttdValue3" value="<?=$ArrData['Approval3Ttd']?>">
 																<img src="<?=$ArrData['Approval3Ttd']?>" width="100%" id="ttdImage3">

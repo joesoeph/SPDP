@@ -208,7 +208,7 @@ class ProofSpend extends Parent_Controller
             'attribute' => $disabled,
 						'ProofSpendId' => $Id,
 						'BudgetRequestId' => set_value('BudgetRequestId', $row->BudgetRequestId),
-						'ProofSpendNo' => set_value('ProofSpendNo', $row->ReimbursePaidTo),
+						'ProofSpendNo' => set_value('ProofSpendNo', $row->ProofSpendNo),
 						'ProofSpendDate' => set_value('ProofSpendDate', $row->ProofSpendDate),
 						'NoUrut' => set_value('NoUrut', $row->NoUrut),
 						'NoUrutReimburse' => set_value('NoUrutReimburse', $row->NoUrutReimburse),
