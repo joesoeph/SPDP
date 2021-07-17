@@ -116,10 +116,10 @@
 				<td style="width: 96.0656%; height: 13px;" colspan="3"><strong>FORM A-03 BUKTI PENGELUARAN KAS (1)</strong></td>
 			</tr>
 			<tr style="height: 13px; border: 0;">
-				<td style="width: 96.0656%; height: 13px;" colspan="3"><strong>Cash / Cek (BG) No:</strong> <?= $DataDetail->ReimburseNo ?></td>
+				<td style="width: 96.0656%; height: 13px;" colspan="3"><strong>Cash / Cek (BG) No:</strong> <?= $DataDetail->WithReimburse == 'Y' ? $DataDetail->ReimburseNo : null?></td>
 			</tr>
 			<tr style="height: 13px; border: 1;">
-				<td style="width: 96.0656%; height: 13px;" colspan="3"><strong>Dibayarkan kepada:</strong> <?= $DataDetail->ReimbursePaidTo ?></td>
+				<td style="width: 96.0656%; height: 13px;" colspan="3"><strong>Dibayarkan kepada:</strong> <?= $DataDetail->WithReimburse == 'Y' ? $DataDetail->ReimbursePaidTo : null?></td>
 			</tr>
 			<tr style="height: 19px;">
 				<td style="width: 20%; height: 19px;"><strong>Kode Account</strong></td>

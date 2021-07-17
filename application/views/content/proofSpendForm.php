@@ -67,6 +67,15 @@ $approvalDoneDisplay = 'none';
 											</div>
 										</div>
 
+										<div class='form-group'>
+											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
+											<div class='col-md-8'>
+												<input type="file" class="form-control" name="Attachment" id="Attachment">
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+												<?php echo form_error('Attachment') ?>
+											</div>
+										</div>
+
                   </div>
 
                   <div class="col-md-6">
@@ -87,7 +96,7 @@ $approvalDoneDisplay = 'none';
                       </div>
                     </div>
 
-										<div class='form-group ' style="display: none;">
+										<div class='form-group ' style="display: block;">
 											<label class="col-md-4 control-label">NO&nbsp;:</label>
 											<div class='col-md-3'>
 												<input type="text" class="form-control" name="NoUrutReimburse" id="NoUrutReimburse" placeholder="" value="<?php echo $ArrData['NoUrutReimburse']; ?>" readonly <?=$ArrData['attribute']?>/>
@@ -96,6 +105,17 @@ $approvalDoneDisplay = 'none';
 										</div>
 
 										<div class='form-group'>
+											<label class="col-md-4 control-label">Ada Reimburse? &nbsp;:</label>
+											<div class='col-md-8'>
+												<select name="WithReimburse" id="WithReimburse" class="form-control" style="width: 20%;">
+													<option value="N" <?=$ArrData['WithReimburse'] == 'N' ? 'selected' : null?>>No</option>
+													<option value="Y" <?=$ArrData['WithReimburse'] == 'Y' ? 'selected' : null?>>Yes</option>
+												</select>
+												<?php echo form_error('ReimburseNo') ?>
+											</div>
+										</div>
+
+										<div class='form-group WithReimburseGroup' style="display: none;">
 											<label class="col-md-4 control-label">No Reimburse&nbsp;:</label>
 											<div class='col-md-8'>
 												<input type="text" class="form-control" name="ReimburseNo" id="ReimburseNo" placeholder="" value="<?php echo $ArrData['ReimburseNo']; ?>" <?=$ArrData['attribute']?>/>
@@ -103,20 +123,11 @@ $approvalDoneDisplay = 'none';
 											</div>
 										</div>
 
-										<div class='form-group'>
+										<div class='form-group WithReimburseGroup' style="display: none;">
 											<label class="col-md-4 control-label">Reimburse Ke&nbsp;:</label>
 											<div class='col-md-8'>
 												<input type="text" class="form-control" name="ReimbursePaidTo" id="ReimbursePaidTo" placeholder="" value="<?php echo $ArrData['ReimbursePaidTo']; ?>" <?=$ArrData['attribute']?>/>
 												<?php echo form_error('ReimbursePaidTo') ?>
-											</div>
-										</div>
-
-										<div class='form-group'>
-											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
-											<div class='col-md-8'>
-												<input type="file" class="form-control" name="Attachment" id="Attachment">
-												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
-												<?php echo form_error('Attachment') ?>
 											</div>
 										</div>
 
@@ -743,9 +754,9 @@ $approvalDoneDisplay = 'none';
 					<div class='form-group'>
 						<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
 						<div class='col-md-4'>
-							<input type="file" class="form-control" name="Attachment" id="Attachment">
-							<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
-							<?php echo form_error('Attachment') ?>
+							<input type="file" class="form-control" name="AttachmentReimburse" id="AttachmentReimburse">
+							<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=base_url('upload/' . $ArrData['AttachmentReimburse'])?>">See this attachment</a> <?php endif; ?>
+							<?php echo form_error('AttachmentReimburse') ?>
 						</div>
 					</div>
 					<button type="submit" class="btn btn-ok pull-right">Upload</button>
@@ -870,8 +881,41 @@ $approvalDoneDisplay = 'none';
 	initSignature("3");
 	<?php endif; ?>
 
+	function reimburseVisibility(val) {
+		if(val === 'Y') {
+			$(".WithReimburseGroup").show();
+		} else {
+			$(".WithReimburseGroup").hide();
+		}
+	}
+
+	$("#WithReimburse").change(function() {
+		if(this.value === 'Y') {
+			$(".WithReimburseGroup").show();
+			$.ajax({
+				url: `<?=site_url('ProofSpend/get_reimburse_number')?>`,
+				dataType: "json",
+				data: {
+					'WithReimburse': this.value,
+					'ProofSpendId': '<?=$ArrData['ProofSpendId']?>'
+				},
+				type: "POST",
+				success: function (data) {
+					console.log(data)
+					$("#ReimburseNo").val(data.ReimburseNo);
+					$("#NoUrutReimburse").val(data.NoUrutReimburse);
+				},
+				error: function (xhr, exception) {
+				}
+			}); 
+		} else {
+			$(".WithReimburseGroup").hide();
+		}
+	});
 
 	$(document).ready(function(){
+		reimburseVisibility($("#WithReimburse").val());
+		
 		$('#TotalAmount, .Currency').inputmask('decimal',
 		{ 'alias': 'numeric',
 			'groupSeparator': ',',

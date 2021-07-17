@@ -59,6 +59,7 @@ class ProofSpend extends Parent_Controller
 							'ProofSpendNo' => $row->ProofSpendNo,
 							'ProofSpendDate' => $row->ProofSpendDate,
 							'NoUrut' => $row->NoUrut,
+							'WithReimburse' => $row->WithReimburse,
 							'NoUrutReimburse' => $row->NoUrutReimburse,
 							'ReimburseNo' => $row->ReimburseNo,
 							'ReimbursePaidTo' => $row->ReimbursePaidTo,
@@ -135,7 +136,7 @@ class ProofSpend extends Parent_Controller
 				//BPK( No)/bulan/tahun
         $array_bulan = array(1=> "I", 2=>"II", 3=>"III", 4=>"IV", 5=>"V", 6=>"VI", 7=>"VII", 8=>"VIII", 9=>"IX", 10=>"X", 11=>"XI", 12=>"XII");
         $ProofSpendNo   = "BPK" . $NoUrut . "/".$array_bulan[date('n')]."/".date("Y");
-        $ReimburseNo   = "RE" . $NoUrut . "/".$array_bulan[date('n')]."/".date("Y");
+        $ReimburseNo   = "RE" . $NoUrutReimburse . "/".$array_bulan[date('n')]."/".date("Y");
                                 
         $Datas['ArrData'] = array(
             'button' => 'Simpan',
@@ -147,6 +148,7 @@ class ProofSpend extends Parent_Controller
 						'ReimburseNo' => set_value('ReimburseNo', $ReimburseNo),
 						'NoUrut' => $NoUrut,
 						'NoUrutReimburse' => $NoUrutReimburse,
+						'WithReimburse' => set_value('WithReimburse'),
 						'ReimbursePaidTo' => set_value('ReimbursePaidTo'),
 						'TotalAmount' => set_value('TotalAmount'),
 						'Classification' => set_value('Classification'),
@@ -215,6 +217,7 @@ class ProofSpend extends Parent_Controller
 						'ProofSpendNo' => set_value('ProofSpendNo', $row->ProofSpendNo),
 						'ProofSpendDate' => set_value('ProofSpendDate', $row->ProofSpendDate),
 						'NoUrut' => set_value('NoUrut', $row->NoUrut),
+						'WithReimburse' => set_value('WithReimburse', $row->WithReimburse),
 						'NoUrutReimburse' => set_value('NoUrutReimburse', $row->NoUrutReimburse),
 						'ReimburseNo' => set_value('ReimburseNo', $row->ReimburseNo),
 						'ReimbursePaidTo' => set_value('ReimbursePaidTo', $row->ReimbursePaidTo),
@@ -297,21 +300,25 @@ class ProofSpend extends Parent_Controller
 							'ProofSpendNo' => $this->input->post('ProofSpendNo', TRUE),
 							'ProofSpendDate' => $this->input->post('ProofSpendDate', TRUE),
 							'NoUrut' => $this->input->post('NoUrut', TRUE),
-							'NoUrutReimburse' => $this->input->post('NoUrutReimburse', TRUE),
-							'ReimburseNo' => $this->input->post('ReimburseNo', TRUE),
-							'ReimbursePaidTo' => $this->input->post('ReimbursePaidTo', TRUE),
 							'TotalAmount' => $this->input->post('TotalAmount', TRUE),
 							'Classification' => $this->input->post('Classification', TRUE),
 							'Recipient' => $this->input->post('Recipient', TRUE),
 							'Approval1' => $this->input->post('Approval1', TRUE),
 							'Approval2' => $this->input->post('Approval2', TRUE),
 							'Approval3' => $this->input->post('Approval3', TRUE),
+							'WithReimburse' => $this->input->post('WithReimburse', TRUE),
           		'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id')
         	  );
 
 						if($_FILES["Attachment"]['name']) {
 							$data['Attachment'] = $newName;
+						}
+
+						if($this->input->post('WithReimburse', TRUE) == 'Y') {
+							$data['NoUrutReimburse'] = $this->input->post('NoUrutReimburse', TRUE);
+							$data['ReimburseNo'] = $this->input->post('ReimburseNo', TRUE);
+							$data['ReimbursePaidTo'] = $this->input->post('ReimbursePaidTo', TRUE);
 						}
 
             $exst = $this->GlobalModel->getDataByWhere('trnproofspend', array('NoUrut' => $this->input->post('NoUrut',TRUE)));
@@ -372,21 +379,25 @@ class ProofSpend extends Parent_Controller
 					'ProofSpendNo' => $this->input->post('ProofSpendNo', TRUE),
 					'ProofSpendDate' => $this->input->post('ProofSpendDate', TRUE),
 					'NoUrut' => $this->input->post('NoUrut', TRUE),
-					'NoUrutReimburse' => $this->input->post('NoUrutReimburse', TRUE),
-					'ReimburseNo' => $this->input->post('ReimburseNo', TRUE),
-					'ReimbursePaidTo' => $this->input->post('ReimbursePaidTo', TRUE),
 					'TotalAmount' => $this->input->post('TotalAmount', TRUE),
 					'Classification' => $this->input->post('Classification', TRUE),
 					'Recipient' => $this->input->post('Recipient', TRUE),
 					'Approval1' => $this->input->post('Approval1', TRUE),
 					'Approval2' => $this->input->post('Approval2', TRUE),
 					'Approval3' => $this->input->post('Approval3', TRUE),
+					'WithReimburse' => $this->input->post('WithReimburse', TRUE),
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
 
 				if($_FILES['Attachment']['name']) {
 					$data['Attachment'] = $newName;
+				}
+
+				if($this->input->post('WithReimburse', TRUE) == 'Y') {
+					$data['NoUrutReimburse'] = $this->input->post('NoUrutReimburse', TRUE);
+					$data['ReimburseNo'] = $this->input->post('ReimburseNo', TRUE);
+					$data['ReimbursePaidTo'] = $this->input->post('ReimbursePaidTo', TRUE);
 				}
 
         if($this->input->post('Approval1Status',TRUE)){
@@ -607,7 +618,7 @@ class ProofSpend extends Parent_Controller
       //   Informasi PO baru dengan No. ".$data->PoNo." diminta untuk direvisi oleh approver $Approval.
       // ";
       // $this->_send_email($to, $set_message, $subject);
-      $this->GlobalModel->globalUpdate('trnproofspend', array('ProofSpend' => $Id), array('LockDate' => NULL));
+      $this->GlobalModel->globalUpdate('trnproofspend', array('ProofSpendId' => $Id), array('LockDate' => NULL));
       // $this->ProofSpend_model->setNullRequestSppPoById($Id);
       // send email
     }
@@ -633,12 +644,12 @@ class ProofSpend extends Parent_Controller
     if(!$this->arrAccessMenu['Update']){
       $this->session->set_flashdata('message', 'Anda tidak punya akses');
     } else {
-      $BudgetRequestId = $this->input->post('Id', TRUE);
+      $ProofSpendId = $this->input->post('Id', TRUE);
       $data = array(
         'LockDate' => date("Y-m-d H:i:s"),
         'LockByUserId' => $this->session->userdata('user_id')
       );
-      $res = $this->ProofSpend_model->update($BudgetRequestId, $data);
+      $res = $this->ProofSpend_model->update($ProofSpendId, $data);
 
       // // send email
       // $data    = $this->ProofSpend_model->get_po_by_id($BudgetRequestId);
@@ -682,7 +693,7 @@ class ProofSpend extends Parent_Controller
 	public function store_upload($Id)
 	{
 		if($this->arrAccessMenu['Update']){
-			$newName = 'proof_spend_attachment_' . $Id . '_' . $_FILES["Attachment"]['name'];
+			$newName = 'proofspend_attachment_reimburse_' . $Id . '_' . $_FILES["AttachmentReimburse"]['name'];
 			$config['upload_path'] = './upload/';
 			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
 			$config['max_size'] = 2000;
@@ -690,15 +701,15 @@ class ProofSpend extends Parent_Controller
 			$config['file_name'] = $newName;
 			$this->load->library('upload', $config);
 
-			if (!$this->upload->do_upload('Attachment')) 
+			if (!$this->upload->do_upload('AttachmentReimburse')) 
 			{
 				$error = array('error' => $this->upload->display_errors());
 				$this->session->set_flashdata('message', $error['error']);
 				redirect(site_url('ProofSpend'));
 			}
 
-			if($_FILES["Attachment"]['name']) {
-				$data['Attachment'] = $newName;
+			if($_FILES["AttachmentReimburse"]['name']) {
+				$data['AttachmentReimburse'] = $newName;
 			}
 			$this->ProofSpend_model->update($Id, $data);
 
@@ -716,9 +727,9 @@ class ProofSpend extends Parent_Controller
 			$row = $this->ProofSpend_model->getById($Id);
 
 			if ($row) {
-				$data['Attachment'] = NULL;
+				$data['AttachmentReimburse'] = NULL;
 
-				unlink("./upload/$row->Attachment");
+				unlink("./upload/$row->AttachmentReimburse");
 
 				$this->ProofSpend_model->update($row->ProofSpendId, $data);
 
@@ -731,6 +742,27 @@ class ProofSpend extends Parent_Controller
 		} else {
 			$this->session->set_flashdata('message', 'Anda tidak punya akses');
 			redirect(site_url('ProofSpend/Update/' . $Id));
+		}
+	}
+
+	public function get_reimburse_number()
+	{
+		$WithReimburse = $this->input->post('WithReimburse', TRUE);
+		$ProofSpendId = $this->input->post('ProofSpendId', TRUE);
+		if($WithReimburse == 'Y') {
+			$row = $this->GlobalModel->getDataByWhere('trnproofspend', ['ProofSpendId' => $ProofSpendId]);
+			$NoUrutReimburse = $this->ProofSpend_model->lastNoUrutReimburse();
+			$NoUrutReimburse = str_pad($NoUrutReimburse[0]->NoUrutReimburse+1, 4, '0', STR_PAD_LEFT);
+
+			$array_bulan = array(1=> "I", 2=>"II", 3=>"III", 4=>"IV", 5=>"V", 6=>"VI", 7=>"VII", 8=>"VIII", 9=>"IX", 10=>"X", 11=>"XI", 12=>"XII");
+			$ReimburseNo   = "RE" . $NoUrutReimburse . "/".$array_bulan[date('n')]."/".date("Y");
+
+			if($row->NoUrutReimburse) {
+				$ReimburseNo = $row->ReimburseNo;
+				$NoUrutReimburse = $row->NoUrutReimburse;
+			}
+
+			echo json_encode(['NoUrutReimburse' => $NoUrutReimburse,'ReimburseNo' => $ReimburseNo]);
 		}
 	}
 
