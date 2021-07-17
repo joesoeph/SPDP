@@ -160,6 +160,7 @@ class Refund extends Parent_Controller
 						'Approval3Ttd' => set_value('Approval3Ttd'),
 						'LockDate' => set_value('LockDate'),
 						'LockByUserId' => set_value('LockByUserId'),
+						'Attachment' => set_value('Attachment'),
 						'CreatedDate' => set_value('CreatedDate'),
 						'CreatedByUserId' => set_value('CreatedByUserId'),
 						'LastChangedDate' => set_value('LastChangedDate'),
@@ -222,6 +223,7 @@ class Refund extends Parent_Controller
 						'Approval3Ttd' => set_value('Approval3Ttd', $row->Approval3Ttd),
 						'LockDate' => set_value('LockDate', $row->LockDate),
 						'LockByUserId' => set_value('LockByUserId', $row->LockByUserId),
+						'Attachment' => set_value('Attachment', $row->Attachment),
 						'CreatedDate' => set_value('CreatedDate', $row->CreatedDate),
 						'CreatedByUserId' => set_value('CreatedByUserId', $row->CreatedByUserId),
 						'LastChangedDate' => set_value('LastChangedDate', $row->LastChangedDate),
@@ -251,7 +253,22 @@ class Refund extends Parent_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
-            $RefundId = uniqid().uniqid();
+						$RefundId = uniqid().uniqid();
+						$newName = 'refund_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+						$config['upload_path'] = './upload/';
+						$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+						$config['max_size'] = 2000;
+						$config['overwrite'] = TRUE;
+						$config['file_name'] = $newName;
+						$this->load->library('upload', $config);
+
+						if (!$this->upload->do_upload('Attachment')) 
+						{
+							$error = array('error' => $this->upload->display_errors());
+							$this->session->set_flashdata('message', $error['error']);
+							redirect(site_url('Refund'));
+						}
+
             $data = array(
               'RefundId' => $RefundId,
 							'ProofSpendId' => $this->input->post('ProofSpendId', TRUE),
@@ -264,6 +281,7 @@ class Refund extends Parent_Controller
 							'Approval1' => $this->input->post('Approval1', TRUE),
 							'Approval2' => $this->input->post('Approval2', TRUE),
 							'Approval3' => $this->input->post('Approval3', TRUE),
+							'Attachment' => $newName,
 							'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id'),
         	  );
@@ -308,6 +326,24 @@ class Refund extends Parent_Controller
     public function update_action($Id)
     {
       if($this->arrAccessMenu['Update']){
+
+				if($_FILES['Attachment']['name']) {
+					$newName = 'refund_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+					$config['upload_path'] = './upload/';
+					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+					$config['max_size'] = 2000;
+					$config['overwrite'] = TRUE;
+					$config['file_name'] = $newName;
+					$this->load->library('upload', $config);
+	
+					if (!$this->upload->do_upload('Attachment')) 
+					{
+						$error = array('error' => $this->upload->display_errors());
+						$this->session->set_flashdata('message', $error['error']);
+						redirect(site_url('Refund'));
+					}
+				}
+
         $data = array(
 					'RefundId' => $Id,
 					'ProofSpendId' => $this->input->post('ProofSpendId', TRUE),
@@ -319,6 +355,7 @@ class Refund extends Parent_Controller
 					'Approval1' => $this->input->post('Approval1', TRUE),
 					'Approval2' => $this->input->post('Approval2', TRUE),
 					'Approval3' => $this->input->post('Approval3', TRUE),
+					'Attachment' => $newName,
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
@@ -616,8 +653,8 @@ class Refund extends Parent_Controller
 
 	private function _rules()
 	{
-		$this->form_validation->set_rules('TotalAmount', 'Total Jumlah', 'trim|required');
-		// $this->form_validation->set_rules('NoUrut', 'Proyek', 'trim|required');
+		// $this->form_validation->set_rules('TotalAmount', 'Total Jumlah', 'trim|required');
+		$this->form_validation->set_rules('NoUrut', 'Proyek', 'trim|required');
 		// $this->form_validation->set_rules('BudgetRequestNo', 'Nomor Berkas', 'trim|required');
 		// $this->form_validation->set_rules('BudgetRequestDate', 'Tanggal Berkas', 'trim|required');
 		// $this->form_validation->set_rules('Approval1', 'approval1', 'trim|required');

@@ -26,7 +26,7 @@ $approvalDoneDisplay = 'none';
           <div class='col-xs-12'>
             <div class='box box-primary'>
               <?=$this->session->userdata('message') <> '' ? '<div class="alert alert-success">'.$this->session->userdata('message').'</div>' : ''; ?>
-              <form action='<?php echo $ArrData['action']; ?>' method='post' class='form-horizontal' id="_form">
+              <form action='<?php echo $ArrData['action']; ?>' method='post' class='form-horizontal' id="_form" enctype="multipart/form-data">
 
                 <div class="row">
                   <div class="col-md-6">
@@ -78,13 +78,22 @@ $approvalDoneDisplay = 'none';
                       </div>
                     </div>
 
-                    <div class='form-group'>
-                      <label class="col-md-4 control-label">No Berkas&nbsp;:</label>
-                      <div class='col-md-8'>
-                        <input type="text" class="form-control" name="RefundNo" id="RefundNo" placeholder="" value="<?php echo $ArrData['RefundNo']; ?>" <?=$ArrData['attribute']?>/>
-                        <?php echo form_error('RefundNo') ?>
-                      </div>
-                    </div>
+										<div class='form-group'>
+											<label class="col-md-4 control-label">No Berkas&nbsp;:</label>
+											<div class='col-md-8'>
+												<input type="text" class="form-control" name="RefundNo" id="RefundNo" placeholder="" value="<?php echo $ArrData['RefundNo']; ?>" <?=$ArrData['attribute']?>/>
+												<?php echo form_error('RefundNo') ?>
+											</div>
+										</div>
+
+										<div class='form-group'>
+											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
+											<div class='col-md-8'>
+												<input type="file" class="form-control" name="Attachment" id="Attachment">
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+												<?php echo form_error('Attachment') ?>
+											</div>
+										</div>
 
                   </div>
                 </div>

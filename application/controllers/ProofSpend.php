@@ -84,6 +84,7 @@ class ProofSpend extends Parent_Controller
 							'Approval3Ttd' => $row->Approval3Ttd,
 							'LockDate' => $row->LockDate,
 							'LockByUserId' => $row->LockByUserId,
+							'Attachment' => $row->Attachment,
 							'CreatedDate' => $row->CreatedDate,
 							'CreatedByUserId' => $row->CreatedByUserId,
 							'LastChangedDate' => $row->LastChangedDate,
@@ -168,6 +169,7 @@ class ProofSpend extends Parent_Controller
 						'Approval3Ttd' => set_value('Approval3Ttd'),
 						'LockDate' => set_value('LockDate'),
 						'LockByUserId' => set_value('LockByUserId'),
+						'Attachment' => set_value('Attachment'),
 						'CreatedDate' => set_value('CreatedDate'),
 						'CreatedByUserId' => set_value('CreatedByUserId'),
 						'LastChangedDate' => set_value('LastChangedDate'),
@@ -236,6 +238,7 @@ class ProofSpend extends Parent_Controller
 						'Approval3Ttd' => set_value('Approval3Ttd', $row->Approval3Ttd),
 						'LockDate' => set_value('LockDate', $row->LockDate),
 						'LockByUserId' => set_value('LockByUserId', $row->LockByUserId),
+						'Attachment' => set_value('Attachment', $row->Attachment),
 						'CreatedDate' => set_value('CreatedDate', $row->CreatedDate),
 						'CreatedByUserId' => set_value('CreatedByUserId', $row->CreatedByUserId),
 						'LastChangedDate' => set_value('LastChangedDate', $row->LastChangedDate),
@@ -267,6 +270,21 @@ class ProofSpend extends Parent_Controller
             $this->create();
         } else {
             $ProofSpendId = uniqid().uniqid();
+						$newName = 'proof_spend_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+						$config['upload_path'] = './upload/';
+						$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+						$config['max_size'] = 2000;
+						$config['overwrite'] = TRUE;
+						$config['file_name'] = $newName;
+						$this->load->library('upload', $config);
+
+						if (!$this->upload->do_upload('Attachment')) 
+						{
+							$error = array('error' => $this->upload->display_errors());
+							$this->session->set_flashdata('message', $error['error']);
+							redirect(site_url('ProofSpend'));
+						}
+
             $data = array(
               'ProofSpendId' => $ProofSpendId,
 							'BudgetRequestId' => $this->input->post('BudgetRequestId', TRUE),
@@ -282,6 +300,7 @@ class ProofSpend extends Parent_Controller
 							'Approval1' => $this->input->post('Approval1', TRUE),
 							'Approval2' => $this->input->post('Approval2', TRUE),
 							'Approval3' => $this->input->post('Approval3', TRUE),
+							'Attachment' => $newName,
           		'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id')
         	  );
@@ -321,8 +340,26 @@ class ProofSpend extends Parent_Controller
     public function update_action($Id)
     {
       if($this->arrAccessMenu['Update']){
+
+				if($_FILES['Attachment']['name']) {
+					$newName = 'proof_spend_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+					$config['upload_path'] = './upload/';
+					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+					$config['max_size'] = 2000;
+					$config['overwrite'] = TRUE;
+					$config['file_name'] = $newName;
+					$this->load->library('upload', $config);
+	
+					if (!$this->upload->do_upload('Attachment')) 
+					{
+						$error = array('error' => $this->upload->display_errors());
+						$this->session->set_flashdata('message', $error['error']);
+						redirect(site_url('BudgetRequest'));
+					}
+				}
+
         $data = array(
-					'BudgetRequestId' => $Id,
+					'ProofSpendId' => $Id,
 					'ProofSpendNo' => $this->input->post('ProofSpendNo', TRUE),
 					'ProofSpendDate' => $this->input->post('ProofSpendDate', TRUE),
 					'NoUrut' => $this->input->post('NoUrut', TRUE),
@@ -335,6 +372,7 @@ class ProofSpend extends Parent_Controller
 					'Approval1' => $this->input->post('Approval1', TRUE),
 					'Approval2' => $this->input->post('Approval2', TRUE),
 					'Approval3' => $this->input->post('Approval3', TRUE),
+					'Attachment' => $newName,
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
@@ -557,7 +595,7 @@ class ProofSpend extends Parent_Controller
       //   Informasi PO baru dengan No. ".$data->PoNo." diminta untuk direvisi oleh approver $Approval.
       // ";
       // $this->_send_email($to, $set_message, $subject);
-      $this->GlobalModel->globalUpdate('trnbudgetrequest', array('BudgetRequestId' => $Id), array('LockDate' => NULL));
+      $this->GlobalModel->globalUpdate('trnproofspend', array('ProofSpend' => $Id), array('LockDate' => NULL));
       // $this->ProofSpend_model->setNullRequestSppPoById($Id);
       // send email
     }

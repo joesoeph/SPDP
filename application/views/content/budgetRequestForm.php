@@ -26,7 +26,7 @@ $approvalDoneDisplay = 'none';
           <div class='col-xs-12'>
             <div class='box box-primary'>
               <?=$this->session->userdata('message') <> '' ? '<div class="alert alert-success">'.$this->session->userdata('message').'</div>' : ''; ?>
-              <form action='<?php echo $ArrData['action']; ?>' method='post' class='form-horizontal' id="_form">
+              <form action='<?php echo $ArrData['action']; ?>' method='post' class='form-horizontal' id="_form" enctype="multipart/form-data">
 
                 <div class="row">
                   <div class="col-md-6">
@@ -56,7 +56,7 @@ $approvalDoneDisplay = 'none';
 
                   <div class="col-md-6">
 
-                    <div class='form-group'>
+                    <div class='form-group' style="display: none;">
                       <label class="col-md-4 control-label">NO&nbsp;:</label>
                       <div class='col-md-3'>
                         <input type="text" class="form-control" name="NoUrut" id="NoUrut" placeholder="" value="<?php echo $ArrData['NoUrut']; ?>" readonly <?=$ArrData['attribute']?>/>
@@ -71,6 +71,15 @@ $approvalDoneDisplay = 'none';
                         <?php echo form_error('BudgetRequestNo') ?>
                       </div>
                     </div>
+
+										<div class='form-group'>
+											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
+											<div class='col-md-8'>
+												<input type="file" class="form-control" name="Attachment" id="Attachment">
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+												<?php echo form_error('Attachment') ?>
+											</div>
+										</div>
 
                   </div>
                 </div>

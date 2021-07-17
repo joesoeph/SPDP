@@ -146,6 +146,7 @@ class BudgetRequest extends Parent_Controller
 						'Approval2Ttd' => set_value('Approval2Ttd'),
 						'LockDate' => set_value('LockDate'),
 						'LockByUserId' => set_value('LockByUserId'),
+						'Attachment' => set_value('Attachment'),
 						'CreatedDate' => set_value('CreatedDate'),
 						'CreatedByUserId' => set_value('CreatedByUserId'),
 						'LastChangedDate' => set_value('LastChangedDate'),
@@ -203,6 +204,7 @@ class BudgetRequest extends Parent_Controller
 						'Approval2Ttd' =>  set_value('Approval2Ttd', $row->Approval2Ttd),
 						'LockDate' =>  set_value('LockDate', $row->LockDate),
 						'LockByUserId' =>  set_value('LockByUserId', $row->LockByUserId),
+						'Attachment' =>  set_value('Attachment', $row->Attachment),
 						'CreatedDate' =>  set_value('CreatedDate', $row->CreatedDate),
 						'CreatedByUserId' =>  set_value('CreatedByUserId', $row->CreatedByUserId),
 						'LastChangedDate' =>  set_value('LastChangedDate', $row->LastChangedDate),
@@ -232,6 +234,21 @@ class BudgetRequest extends Parent_Controller
             $this->create();
         } else {
             $BudgetRequestId = uniqid().uniqid();
+						$newName = 'budget_request_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+						$config['upload_path'] = './upload/';
+						$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+						$config['max_size'] = 2000;
+						$config['overwrite'] = TRUE;
+						$config['file_name'] = $newName;
+						$this->load->library('upload', $config);
+
+						if (!$this->upload->do_upload('Attachment')) 
+						{
+							$error = array('error' => $this->upload->display_errors());
+							$this->session->set_flashdata('message', $error['error']);
+							redirect(site_url('BudgetRequest'));
+						}
+
             $data = array(
               'BudgetRequestId' => $BudgetRequestId,
           		'BudgetRequestNo' => $this->input->post('BudgetRequestNo',TRUE),
@@ -242,6 +259,7 @@ class BudgetRequest extends Parent_Controller
           		'Approval1' => $this->input->post('Approval1',TRUE),
           		'Approval2' => $this->input->post('Approval2',TRUE),
           		'Recipient' => $this->input->post('Recipient',TRUE),
+							'Attachment' => $newName,
           		'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id')
         	  );
@@ -286,6 +304,24 @@ class BudgetRequest extends Parent_Controller
     public function update_action($Id)
     {
       if($this->arrAccessMenu['Update']){
+
+				if($_FILES['Attachment']['name']) {
+					$newName = 'budget_request_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+					$config['upload_path'] = './upload/';
+					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+					$config['max_size'] = 2000;
+					$config['overwrite'] = TRUE;
+					$config['file_name'] = $newName;
+					$this->load->library('upload', $config);
+	
+					if (!$this->upload->do_upload('Attachment')) 
+					{
+						$error = array('error' => $this->upload->display_errors());
+						$this->session->set_flashdata('message', $error['error']);
+						redirect(site_url('BudgetRequest'));
+					}
+				}
+
         $data = array(
 					'BudgetRequestId' => $Id,
 					'BudgetRequestNo' => $this->input->post('BudgetRequestNo',TRUE),
@@ -296,6 +332,7 @@ class BudgetRequest extends Parent_Controller
 					'Approval1' => $this->input->post('Approval1',TRUE),
 					'Approval2' => $this->input->post('Approval2',TRUE),
 					'Recipient' => $this->input->post('Recipient',TRUE),
+					'Attachment' => $newName,
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
