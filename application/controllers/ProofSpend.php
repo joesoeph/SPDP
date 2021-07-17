@@ -85,6 +85,7 @@ class ProofSpend extends Parent_Controller
 							'LockDate' => $row->LockDate,
 							'LockByUserId' => $row->LockByUserId,
 							'Attachment' => $row->Attachment,
+							'AttachmentReimburse' => $row->AttachmentReimburse,
 							'CreatedDate' => $row->CreatedDate,
 							'CreatedByUserId' => $row->CreatedByUserId,
 							'LastChangedDate' => $row->LastChangedDate,
@@ -170,6 +171,7 @@ class ProofSpend extends Parent_Controller
 						'LockDate' => set_value('LockDate'),
 						'LockByUserId' => set_value('LockByUserId'),
 						'Attachment' => set_value('Attachment'),
+						'AttachmentReimburse' => set_value('AttachmentReimburse'),
 						'CreatedDate' => set_value('CreatedDate'),
 						'CreatedByUserId' => set_value('CreatedByUserId'),
 						'LastChangedDate' => set_value('LastChangedDate'),
@@ -239,6 +241,7 @@ class ProofSpend extends Parent_Controller
 						'LockDate' => set_value('LockDate', $row->LockDate),
 						'LockByUserId' => set_value('LockByUserId', $row->LockByUserId),
 						'Attachment' => set_value('Attachment', $row->Attachment),
+						'AttachmentReimburse' => set_value('AttachmentReimburse', $row->AttachmentReimburse),
 						'CreatedDate' => set_value('CreatedDate', $row->CreatedDate),
 						'CreatedByUserId' => set_value('CreatedByUserId', $row->CreatedByUserId),
 						'LastChangedDate' => set_value('LastChangedDate', $row->LastChangedDate),
@@ -270,19 +273,22 @@ class ProofSpend extends Parent_Controller
             $this->create();
         } else {
             $ProofSpendId = uniqid().uniqid();
-						$newName = 'proof_spend_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
-						$config['upload_path'] = './upload/';
-						$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-						$config['max_size'] = 2000;
-						$config['overwrite'] = TRUE;
-						$config['file_name'] = $newName;
-						$this->load->library('upload', $config);
 
-						if (!$this->upload->do_upload('Attachment')) 
-						{
-							$error = array('error' => $this->upload->display_errors());
-							$this->session->set_flashdata('message', $error['error']);
-							redirect(site_url('ProofSpend'));
+						if($_FILES['Attachment']['name']) {
+							$newName = 'proof_spend_attachment_' . $ProofSpendId . '_' . $_FILES["Attachment"]['name'];
+							$config['upload_path'] = './upload/';
+							$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+							$config['max_size'] = 2000;
+							$config['overwrite'] = TRUE;
+							$config['file_name'] = $newName;
+							$this->load->library('upload', $config);
+	
+							if (!$this->upload->do_upload('Attachment')) 
+							{
+								$error = array('error' => $this->upload->display_errors());
+								$this->session->set_flashdata('message', $error['error']);
+								redirect(site_url('ProofSpend'));
+							}
 						}
 
             $data = array(
@@ -300,10 +306,13 @@ class ProofSpend extends Parent_Controller
 							'Approval1' => $this->input->post('Approval1', TRUE),
 							'Approval2' => $this->input->post('Approval2', TRUE),
 							'Approval3' => $this->input->post('Approval3', TRUE),
-							'Attachment' => $newName,
           		'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id')
         	  );
+
+						if($_FILES["Attachment"]['name']) {
+							$data['Attachment'] = $newName;
+						}
 
             $exst = $this->GlobalModel->getDataByWhere('trnproofspend', array('NoUrut' => $this->input->post('NoUrut',TRUE)));
             if($exst){
@@ -342,7 +351,7 @@ class ProofSpend extends Parent_Controller
       if($this->arrAccessMenu['Update']){
 
 				if($_FILES['Attachment']['name']) {
-					$newName = 'proof_spend_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+					$newName = 'proof_spend_attachment_' . $Id . '_' . $_FILES["Attachment"]['name'];
 					$config['upload_path'] = './upload/';
 					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
 					$config['max_size'] = 2000;
@@ -354,7 +363,7 @@ class ProofSpend extends Parent_Controller
 					{
 						$error = array('error' => $this->upload->display_errors());
 						$this->session->set_flashdata('message', $error['error']);
-						redirect(site_url('BudgetRequest'));
+						redirect(site_url('ProofSpend'));
 					}
 				}
 
@@ -372,10 +381,13 @@ class ProofSpend extends Parent_Controller
 					'Approval1' => $this->input->post('Approval1', TRUE),
 					'Approval2' => $this->input->post('Approval2', TRUE),
 					'Approval3' => $this->input->post('Approval3', TRUE),
-					'Attachment' => $newName,
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
+
+				if($_FILES['Attachment']['name']) {
+					$data['Attachment'] = $newName;
+				}
 
         if($this->input->post('Approval1Status',TRUE)){
           $data['Approval1Status'] = $this->input->post('Approval1Status',TRUE);
@@ -666,6 +678,61 @@ class ProofSpend extends Parent_Controller
       $this->session->set_flashdata('message', 'Data dikunci');
     }
   }
+
+	public function store_upload($Id)
+	{
+		if($this->arrAccessMenu['Update']){
+			$newName = 'proof_spend_attachment_' . $Id . '_' . $_FILES["Attachment"]['name'];
+			$config['upload_path'] = './upload/';
+			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+			$config['max_size'] = 2000;
+			$config['overwrite'] = TRUE;
+			$config['file_name'] = $newName;
+			$this->load->library('upload', $config);
+
+			if (!$this->upload->do_upload('Attachment')) 
+			{
+				$error = array('error' => $this->upload->display_errors());
+				$this->session->set_flashdata('message', $error['error']);
+				redirect(site_url('ProofSpend'));
+			}
+
+			if($_FILES["Attachment"]['name']) {
+				$data['Attachment'] = $newName;
+			}
+			$this->ProofSpend_model->update($Id, $data);
+
+			$this->session->set_flashdata('message', 'Data disimpan');
+			redirect(site_url('ProofSpend/update/'.$Id));
+		} else {
+			$this->session->set_flashdata('message', 'Anda tidak punya akses');
+			redirect(site_url('ProofSpend'));
+		}
+	}
+
+	public function delete_upload($Id)
+	{
+		if($this->arrAccessMenu['Delete']){
+			$row = $this->ProofSpend_model->getById($Id);
+
+			if ($row) {
+				$data['Attachment'] = NULL;
+
+				unlink("./upload/$row->Attachment");
+
+				$this->ProofSpend_model->update($row->ProofSpendId, $data);
+
+				$this->session->set_flashdata('message', 'Data upload dihapus');
+				redirect(site_url('ProofSpend/Update/' . $Id));
+			} else {
+				$this->session->set_flashdata('message', 'Data upload tidak ditemukan');
+				redirect(site_url('ProofSpend/Update/' . $Id));
+			}
+		} else {
+			$this->session->set_flashdata('message', 'Anda tidak punya akses');
+			redirect(site_url('ProofSpend/Update/' . $Id));
+		}
+	}
 
 	private function _rules()
 	{

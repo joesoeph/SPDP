@@ -234,20 +234,6 @@ class BudgetRequest extends Parent_Controller
             $this->create();
         } else {
             $BudgetRequestId = uniqid().uniqid();
-						$newName = 'budget_request_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
-						$config['upload_path'] = './upload/';
-						$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-						$config['max_size'] = 2000;
-						$config['overwrite'] = TRUE;
-						$config['file_name'] = $newName;
-						$this->load->library('upload', $config);
-
-						if (!$this->upload->do_upload('Attachment')) 
-						{
-							$error = array('error' => $this->upload->display_errors());
-							$this->session->set_flashdata('message', $error['error']);
-							redirect(site_url('BudgetRequest'));
-						}
 
             $data = array(
               'BudgetRequestId' => $BudgetRequestId,
@@ -259,11 +245,10 @@ class BudgetRequest extends Parent_Controller
           		'Approval1' => $this->input->post('Approval1',TRUE),
           		'Approval2' => $this->input->post('Approval2',TRUE),
           		'Recipient' => $this->input->post('Recipient',TRUE),
-							'Attachment' => $newName,
           		'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id')
         	  );
-
+						
             $exst = $this->GlobalModel->getDataByWhere('trnbudgetrequest', array('NoUrut' => $this->input->post('NoUrut',TRUE)));
             if($exst){
               $this->session->set_flashdata('message', 'No urut sudah digunakan');
@@ -304,24 +289,6 @@ class BudgetRequest extends Parent_Controller
     public function update_action($Id)
     {
       if($this->arrAccessMenu['Update']){
-
-				if($_FILES['Attachment']['name']) {
-					$newName = 'budget_request_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
-					$config['upload_path'] = './upload/';
-					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-					$config['max_size'] = 2000;
-					$config['overwrite'] = TRUE;
-					$config['file_name'] = $newName;
-					$this->load->library('upload', $config);
-	
-					if (!$this->upload->do_upload('Attachment')) 
-					{
-						$error = array('error' => $this->upload->display_errors());
-						$this->session->set_flashdata('message', $error['error']);
-						redirect(site_url('BudgetRequest'));
-					}
-				}
-
         $data = array(
 					'BudgetRequestId' => $Id,
 					'BudgetRequestNo' => $this->input->post('BudgetRequestNo',TRUE),
@@ -332,7 +299,6 @@ class BudgetRequest extends Parent_Controller
 					'Approval1' => $this->input->post('Approval1',TRUE),
 					'Approval2' => $this->input->post('Approval2',TRUE),
 					'Recipient' => $this->input->post('Recipient',TRUE),
-					'Attachment' => $newName,
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
@@ -613,6 +579,61 @@ class BudgetRequest extends Parent_Controller
       $this->session->set_flashdata('message', 'Data dikunci');
     }
   }
+
+	public function store_upload($Id)
+	{
+		if($this->arrAccessMenu['Update']){
+			$newName = 'budget_request_attachment_' . $Id . '_' . $_FILES["Attachment"]['name'];
+			$config['upload_path'] = './upload/';
+			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+			$config['max_size'] = 2000;
+			$config['overwrite'] = TRUE;
+			$config['file_name'] = $newName;
+			$this->load->library('upload', $config);
+
+			if (!$this->upload->do_upload('Attachment')) 
+			{
+				$error = array('error' => $this->upload->display_errors());
+				$this->session->set_flashdata('message', $error['error']);
+				redirect(site_url('BudgetRequest'));
+			}
+
+			if($_FILES["Attachment"]['name']) {
+				$data['Attachment'] = $newName;
+			}
+			$this->BudgetRequest_model->update($Id, $data);
+
+			$this->session->set_flashdata('message', 'Data disimpan');
+			redirect(site_url('BudgetRequest/update/'.$Id));
+		} else {
+			$this->session->set_flashdata('message', 'Anda tidak punya akses');
+			redirect(site_url('BudgetRequest'));
+		}
+	}
+
+	public function delete_upload($Id)
+	{
+		if($this->arrAccessMenu['Delete']){
+			$row = $this->BudgetRequest_model->getById($Id);
+
+			if ($row) {
+				$data['Attachment'] = NULL;
+
+				unlink("./upload/$row->Attachment");
+
+				$this->BudgetRequest_model->update($row->BudgetRequestId, $data);
+
+				$this->session->set_flashdata('message', 'Data upload dihapus');
+				redirect(site_url('BudgetRequest/Update/' . $Id));
+			} else {
+				$this->session->set_flashdata('message', 'Data upload tidak ditemukan');
+				redirect(site_url('BudgetRequest/Update/' . $Id));
+			}
+		} else {
+			$this->session->set_flashdata('message', 'Anda tidak punya akses');
+			redirect(site_url('BudgetRequest/Update/' . $Id));
+		}
+	}
 
 	private function _rules()
 	{

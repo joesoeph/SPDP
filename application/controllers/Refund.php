@@ -254,19 +254,22 @@ class Refund extends Parent_Controller
             $this->create();
         } else {
 						$RefundId = uniqid().uniqid();
-						$newName = 'refund_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
-						$config['upload_path'] = './upload/';
-						$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-						$config['max_size'] = 2000;
-						$config['overwrite'] = TRUE;
-						$config['file_name'] = $newName;
-						$this->load->library('upload', $config);
 
-						if (!$this->upload->do_upload('Attachment')) 
-						{
-							$error = array('error' => $this->upload->display_errors());
-							$this->session->set_flashdata('message', $error['error']);
-							redirect(site_url('Refund'));
+						if($_FILES['Attachment']['name']) {
+							$newName = 'refund_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
+							$config['upload_path'] = './upload/';
+							$config['allowed_types'] = 'jpg|jpeg|png|pdf';
+							$config['max_size'] = 2000;
+							$config['overwrite'] = TRUE;
+							$config['file_name'] = $newName;
+							$this->load->library('upload', $config);
+	
+							if (!$this->upload->do_upload('Attachment')) 
+							{
+								$error = array('error' => $this->upload->display_errors());
+								$this->session->set_flashdata('message', $error['error']);
+								redirect(site_url('Refund'));
+							}
 						}
 
             $data = array(
@@ -281,10 +284,13 @@ class Refund extends Parent_Controller
 							'Approval1' => $this->input->post('Approval1', TRUE),
 							'Approval2' => $this->input->post('Approval2', TRUE),
 							'Approval3' => $this->input->post('Approval3', TRUE),
-							'Attachment' => $newName,
 							'CreatedDate' => date("Y-m-d H:i:s"),
           		'CreatedByUserId' => $this->session->userdata('user_id'),
         	  );
+
+						if($_FILES["Attachment"]['name']) {
+							$dwata['Attachment'] = $newName;
+						}
 
             $exst = $this->GlobalModel->getDataByWhere('trnrefund', array('NoUrut' => $this->input->post('NoUrut',TRUE)));
             if($exst){
@@ -355,10 +361,13 @@ class Refund extends Parent_Controller
 					'Approval1' => $this->input->post('Approval1', TRUE),
 					'Approval2' => $this->input->post('Approval2', TRUE),
 					'Approval3' => $this->input->post('Approval3', TRUE),
-					'Attachment' => $newName,
           'LastChangedDate' => date("Y-m-d H:i:s"),
           'LastChangedByUserId' => $this->session->userdata('user_id')
     	  );
+
+				if($_FILES['Attachment']['name']) {
+					$data['Attachment'] = $newName;
+				}
 
         if($this->input->post('Approval1Status',TRUE)){
           $data['Approval1Status'] = $this->input->post('Approval1Status',TRUE);

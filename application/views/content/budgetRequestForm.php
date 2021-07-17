@@ -72,15 +72,6 @@ $approvalDoneDisplay = 'none';
                       </div>
                     </div>
 
-										<div class='form-group'>
-											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
-											<div class='col-md-8'>
-												<input type="file" class="form-control" name="Attachment" id="Attachment">
-												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
-												<?php echo form_error('Attachment') ?>
-											</div>
-										</div>
-
                   </div>
                 </div>
                 
@@ -540,6 +531,31 @@ $approvalDoneDisplay = 'none';
       </div><!-- /.col -->
     </div>
   </div>
+	
+	<!--  && $this->session->userdata('JabatanId') == 99 -->
+	<?php if($ArrData['BudgetRequestId'] && $this->session->userdata('JabatanId') == 99) : ?>
+	<div class="pane pane-purple">
+		<div class="panel-heading">
+			<b>Form Upload</b>
+		</div>
+		<div class="panel-body">
+			<div class="col-xs-12">
+				<form action='<?= site_url('BudgetRequest/store_upload/' . $ArrData['BudgetRequestId']) ?>' method='post' class='form-horizontal' id="_form" enctype="multipart/form-data">
+					<div class='form-group'>
+						<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
+						<div class='col-md-4'>
+							<input type="file" class="form-control" name="Attachment" id="Attachment">
+							<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+							<?php echo form_error('Attachment') ?>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-ok pull-right">Upload</button>
+					<a href="<?=site_url('BudgetRequest/delete_upload/' . $ArrData['BudgetRequestId'])?>" class="btn btn-one pull-right">Hapus</a>
+				</form>
+			</div>
+		</div>
+	</div>
+	<?php endif; ?>
 
     <br>
     <div class="row" <?php if ($this->uri->segment(2) == "create" || $this->uri->segment(2) == "create_action"): echo 'style="display:none;"'; endif;?>>
