@@ -90,7 +90,7 @@ $approvalDoneDisplay = 'none';
 											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
 											<div class='col-md-8'>
 												<input type="file" class="form-control" name="Attachment" id="Attachment">
-												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>" download>See this attachment</a> <?php endif; ?>
 												<?php echo form_error('Attachment') ?>
 											</div>
 										</div>
@@ -662,7 +662,7 @@ $approvalDoneDisplay = 'none';
       <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Print SPP</h4>
+          <h4 class="modal-title">Print</h4>
         </div>
         <div class="modal-body">
           <div class="portlet-body form">

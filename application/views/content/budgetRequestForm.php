@@ -545,12 +545,14 @@ $approvalDoneDisplay = 'none';
 						<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
 						<div class='col-md-4'>
 							<input type="file" class="form-control" name="Attachment" id="Attachment">
-							<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+							<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>" download>See this attachment</a> <?php endif; ?>
 							<?php echo form_error('Attachment') ?>
 						</div>
 					</div>
+					<?php if($this->session->userdata('jabatanid') != 99) :?>
 					<button type="submit" class="btn btn-ok pull-right">Upload</button>
 					<a href="<?=site_url('BudgetRequest/delete_upload/' . $ArrData['BudgetRequestId'])?>" class="btn btn-one pull-right">Hapus</a>
+					<?php endif; ?>
 				</form>
 			</div>
 		</div>

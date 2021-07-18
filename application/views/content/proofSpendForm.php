@@ -71,7 +71,7 @@ $approvalDoneDisplay = 'none';
 											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
 											<div class='col-md-8'>
 												<input type="file" class="form-control" name="Attachment" id="Attachment">
-												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>" download>See this attachment</a> <?php endif; ?>
 												<?php echo form_error('Attachment') ?>
 											</div>
 										</div>
@@ -724,12 +724,14 @@ $approvalDoneDisplay = 'none';
 							<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
 							<div class='col-md-4'>
 								<input type="file" class="form-control" name="AttachmentReimburse" id="AttachmentReimburse">
-								<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=base_url('upload/' . $ArrData['AttachmentReimburse'])?>">See this attachment</a> <?php endif; ?>
+								<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=base_url('upload/' . $ArrData['AttachmentReimburse'])?>" download>See this attachment</a> <?php endif; ?>
 								<?php echo form_error('AttachmentReimburse') ?>
 							</div>
 						</div>
+						<?php if($this->session->userdata('jabatanid') != 99) :?>
 						<button type="submit" class="btn btn-ok pull-right">Upload</button>
 						<a href="<?=site_url('ProofSpend/delete_upload/' . $ArrData['ProofSpendId'])?>" class="btn btn-one pull-right">Hapus</a>
+						<?php endif; ?>
 					</form>
 				</div>
 			</div>
@@ -775,7 +777,7 @@ $approvalDoneDisplay = 'none';
       <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Print SPP</h4>
+          <h4 class="modal-title">Print</h4>
         </div>
         <div class="modal-body">
           <div class="portlet-body form">
