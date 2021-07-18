@@ -585,9 +585,6 @@ class ProofSpend extends Parent_Controller
 
     $DataDetail = $this->ProofSpend_model->getDetail($Id);
     $DataRequests = $this->ProofSpend_model->getRequest($Id);
-
-		echo "<pre>";
-		var_dump($DataDetail); exit();
     
     ob_start();
       $this->load->view('report/proofSpend',array('DataDetail' => $DataDetail, 'DataRequests' => $DataRequests));
