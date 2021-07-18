@@ -272,13 +272,16 @@ class Refund extends Parent_Controller
 							}
 						}
 
+						$TotalAmount = explode(".",($this->input->post('TotalAmount', TRUE)));
+						$TotalAmount = str_replace(",","",($TotalAmount[0]));
+
             $data = array(
               'RefundId' => $RefundId,
 							'ProofSpendId' => $this->input->post('ProofSpendId', TRUE),
 							'RefundDate' => $this->input->post('RefundDate', TRUE),
 							'NoUrut' => $this->input->post('NoUrut', TRUE),
 							'RefundNo' => $this->input->post('RefundNo', TRUE),
-							'TotalAmount' => $this->input->post('TotalAmount', TRUE),
+							'TotalAmount' => $TotalAmount,
 							'Classification' => $this->input->post('Classification', TRUE),
 							'CreatorTtd' => $this->input->post('CreatorTtd', TRUE),
 							'Approval1' => $this->input->post('Approval1', TRUE),
@@ -350,13 +353,16 @@ class Refund extends Parent_Controller
 					}
 				}
 
+				$TotalAmount = explode(".",($this->input->post('TotalAmount', TRUE)));
+				$TotalAmount = str_replace(",","",($TotalAmount[0]));
+
         $data = array(
 					'RefundId' => $Id,
 					'ProofSpendId' => $this->input->post('ProofSpendId', TRUE),
 					'RefundDate' => $this->input->post('RefundDate', TRUE),
 					'NoUrut' => $this->input->post('NoUrut', TRUE),
 					'RefundNo' => $this->input->post('RefundNo', TRUE),
-					'TotalAmount' => $this->input->post('TotalAmount', TRUE),
+					'TotalAmount' => $TotalAmount,
 					'Classification' => $this->input->post('Classification', TRUE),
 					'Approval1' => $this->input->post('Approval1', TRUE),
 					'Approval2' => $this->input->post('Approval2', TRUE),

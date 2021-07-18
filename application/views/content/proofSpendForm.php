@@ -709,7 +709,32 @@ $approvalDoneDisplay = 'none';
         </div>
       </div><!-- /.col -->
     </div>
-  </div>
+	</div>
+	
+		<!--  && $this->session->userdata('jabatanid') == 99 -->
+		<?php if($ArrData['ProofSpendId'] && ($this->session->userdata('jabatanid') == 99 || $this->session->userdata('user_id') == $ArrData['CreatedByUserId'])) : ?>
+		<div class="pane pane-purple">
+			<div class="panel-heading">
+				<b>Form Upload</b>
+			</div>
+			<div class="panel-body">
+				<div class="col-xs-12">
+					<form action='<?= site_url('ProofSpend/store_upload/' . $ArrData['ProofSpendId']) ?>' method='post' class='form-horizontal' id="_form" enctype="multipart/form-data">
+						<div class='form-group'>
+							<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
+							<div class='col-md-4'>
+								<input type="file" class="form-control" name="AttachmentReimburse" id="AttachmentReimburse">
+								<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=base_url('upload/' . $ArrData['AttachmentReimburse'])?>">See this attachment</a> <?php endif; ?>
+								<?php echo form_error('AttachmentReimburse') ?>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-ok pull-right">Upload</button>
+						<a href="<?=site_url('ProofSpend/delete_upload/' . $ArrData['ProofSpendId'])?>" class="btn btn-one pull-right">Hapus</a>
+					</form>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
 
     <br>
     <div class="row" <?php if ($this->uri->segment(2) == "create" || $this->uri->segment(2) == "create_action"): echo 'style="display:none;"'; endif;?>>
@@ -741,31 +766,6 @@ $approvalDoneDisplay = 'none';
       </div>
     </div>
   </div>
-	
-	<!--  && $this->session->userdata('jabatanid') == 99 -->
-	<?php if($ArrData['BudgetRequestId'] && ($this->session->userdata('jabatanid') == 99 || $this->session->userdata('user_id') == $ArrData['CreatedByUserId'])) : ?>
-	<div class="pane pane-purple">
-		<div class="panel-heading">
-			<b>Form Upload</b>
-		</div>
-		<div class="panel-body">
-			<div class="col-xs-12">
-				<form action='<?= site_url('ProofSpend/store_upload/' . $ArrData['ProofSpendId']) ?>' method='post' class='form-horizontal' id="_form" enctype="multipart/form-data">
-					<div class='form-group'>
-						<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
-						<div class='col-md-4'>
-							<input type="file" class="form-control" name="AttachmentReimburse" id="AttachmentReimburse">
-							<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=base_url('upload/' . $ArrData['AttachmentReimburse'])?>">See this attachment</a> <?php endif; ?>
-							<?php echo form_error('AttachmentReimburse') ?>
-						</div>
-					</div>
-					<button type="submit" class="btn btn-ok pull-right">Upload</button>
-					<a href="<?=site_url('ProofSpend/delete_upload/' . $ArrData['ProofSpendId'])?>" class="btn btn-one pull-right">Hapus</a>
-				</form>
-			</div>
-		</div>
-	</div>
-	<?php endif; ?>
 
   <!-- Modal -->
   <div id="modal-print" class="modal fade" role="dialog">

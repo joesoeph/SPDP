@@ -294,13 +294,16 @@ class ProofSpend extends Parent_Controller
 							}
 						}
 
+						$TotalAmount = explode(".",($this->input->post('TotalAmount', TRUE)));
+						$TotalAmount = str_replace(",","",($TotalAmount[0]));
+
             $data = array(
               'ProofSpendId' => $ProofSpendId,
 							'BudgetRequestId' => $this->input->post('BudgetRequestId', TRUE),
 							'ProofSpendNo' => $this->input->post('ProofSpendNo', TRUE),
 							'ProofSpendDate' => $this->input->post('ProofSpendDate', TRUE),
 							'NoUrut' => $this->input->post('NoUrut', TRUE),
-							'TotalAmount' => $this->input->post('TotalAmount', TRUE),
+							'TotalAmount' => $TotalAmount,
 							'Classification' => $this->input->post('Classification', TRUE),
 							'Recipient' => $this->input->post('Recipient', TRUE),
 							'Approval1' => $this->input->post('Approval1', TRUE),
@@ -374,12 +377,15 @@ class ProofSpend extends Parent_Controller
 					}
 				}
 
+				$TotalAmount = explode(".",($this->input->post('TotalAmount', TRUE)));
+				$TotalAmount = str_replace(",","",($TotalAmount[0]));
+
         $data = array(
 					'ProofSpendId' => $Id,
 					'ProofSpendNo' => $this->input->post('ProofSpendNo', TRUE),
 					'ProofSpendDate' => $this->input->post('ProofSpendDate', TRUE),
 					'NoUrut' => $this->input->post('NoUrut', TRUE),
-					'TotalAmount' => $this->input->post('TotalAmount', TRUE),
+					'TotalAmount' => $TotalAmount,
 					'Classification' => $this->input->post('Classification', TRUE),
 					'Recipient' => $this->input->post('Recipient', TRUE),
 					'Approval1' => $this->input->post('Approval1', TRUE),
@@ -579,6 +585,9 @@ class ProofSpend extends Parent_Controller
 
     $DataDetail = $this->ProofSpend_model->getDetail($Id);
     $DataRequests = $this->ProofSpend_model->getRequest($Id);
+
+		echo "<pre>";
+		var_dump($DataDetail); exit();
     
     ob_start();
       $this->load->view('report/proofSpend',array('DataDetail' => $DataDetail, 'DataRequests' => $DataRequests));

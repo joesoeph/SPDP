@@ -235,12 +235,15 @@ class BudgetRequest extends Parent_Controller
         } else {
             $BudgetRequestId = uniqid().uniqid();
 
+						$TotalAmount = explode(".",($this->input->post('TotalAmount', TRUE)));
+						$TotalAmount = str_replace(",","",($TotalAmount[0]));
+
             $data = array(
               'BudgetRequestId' => $BudgetRequestId,
           		'BudgetRequestNo' => $this->input->post('BudgetRequestNo',TRUE),
           		'NoUrut' => $this->input->post('NoUrut',TRUE),
           		'BudgetRequestDate' => $this->input->post('BudgetRequestDate',TRUE),
-          		'TotalAmount' => $this->input->post('TotalAmount',TRUE),
+          		'TotalAmount' => $TotalAmount,
           		'Classification' => $this->input->post('Classification',TRUE),
           		'Approval1' => $this->input->post('Approval1',TRUE),
           		'Approval2' => $this->input->post('Approval2',TRUE),
@@ -289,12 +292,16 @@ class BudgetRequest extends Parent_Controller
     public function update_action($Id)
     {
       if($this->arrAccessMenu['Update']){
+
+				$TotalAmount = explode(".",($this->input->post('TotalAmount', TRUE)));
+				$TotalAmount = str_replace(",","",($TotalAmount[0]));
+
         $data = array(
 					'BudgetRequestId' => $Id,
 					'BudgetRequestNo' => $this->input->post('BudgetRequestNo',TRUE),
 					'NoUrut' => $this->input->post('NoUrut',TRUE),
 					'BudgetRequestDate' => $this->input->post('BudgetRequestDate',TRUE),
-					'TotalAmount' => $this->input->post('TotalAmount',TRUE),
+					'TotalAmount' => $TotalAmount,
 					'Classification' => $this->input->post('Classification',TRUE),
 					'Approval1' => $this->input->post('Approval1',TRUE),
 					'Approval2' => $this->input->post('Approval2',TRUE),
