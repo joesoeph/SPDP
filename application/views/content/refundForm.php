@@ -90,7 +90,7 @@ $approvalDoneDisplay = 'none';
 											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
 											<div class='col-md-8'>
 												<input type="file" class="form-control" name="Attachment" id="Attachment">
-												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('upload/' . $ArrData['Attachment'])?>" download>See this attachment</a> <?php endif; ?>
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=base_url('download/filename/' . $ArrData['Attachment'])?>" download>See this attachment</a> <?php endif; ?>
 												<?php echo form_error('Attachment') ?>
 											</div>
 										</div>
