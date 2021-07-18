@@ -532,8 +532,8 @@ $approvalDoneDisplay = 'none';
     </div>
   </div>
 	
-	<!--  && $this->session->userdata('JabatanId') == 99 -->
-	<?php if($ArrData['BudgetRequestId'] && $this->session->userdata('JabatanId') == 99) : ?>
+	<!--  && $this->session->userdata('jabatanid') == 99 -->
+	<?php if($ArrData['BudgetRequestId'] && $this->session->userdata('jabatanid') == 99) : ?>
 	<div class="pane pane-purple">
 		<div class="panel-heading">
 			<b>Form Upload</b>
@@ -596,7 +596,7 @@ $approvalDoneDisplay = 'none';
       <div class="modal-content modal-dialog modal-lg">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Print SPP</h4>
+          <h4 class="modal-title">Print</h4>
         </div>
         <div class="modal-body">
           <div class="portlet-body form">
