@@ -533,7 +533,7 @@ $approvalDoneDisplay = 'none';
   </div>
 	
 	<!--  && $this->session->userdata('jabatanid') == 99 -->
-	<?php if($ArrData['BudgetRequestId'] && $this->session->userdata('jabatanid') == 99) : ?>
+	<?php if($ArrData['BudgetRequestId'] && ($this->session->userdata('jabatanid') == 99 || $this->session->userdata('user_id') == $ArrData['CreatedByUserId'])) : ?>
 	<div class="pane pane-purple">
 		<div class="panel-heading">
 			<b>Form Upload</b>

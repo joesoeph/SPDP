@@ -96,7 +96,7 @@ $approvalDoneDisplay = 'none';
                       </div>
                     </div>
 
-										<div class='form-group ' style="display: block;">
+										<div class='form-group ' style="display: none;">
 											<label class="col-md-4 control-label">NO&nbsp;:</label>
 											<div class='col-md-3'>
 												<input type="text" class="form-control" name="NoUrutReimburse" id="NoUrutReimburse" placeholder="" value="<?php echo $ArrData['NoUrutReimburse']; ?>" readonly <?=$ArrData['attribute']?>/>
