@@ -71,7 +71,7 @@ $approvalDoneDisplay = 'none';
 											<label class="col-md-4 control-label">Lampiran&nbsp;:</label>
 											<div class='col-md-8'>
 												<input type="file" class="form-control" name="Attachment" id="Attachment">
-												<?php if($ArrData['Attachment']) : ?> <a href="<?=site_url('download/filename/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
+												<?php if($ArrData['Attachment']) : ?> <a href="<?=site_url('upload/' . $ArrData['Attachment'])?>">See this attachment</a> <?php endif; ?>
 												<?php echo form_error('Attachment') ?>
 											</div>
 										</div>
@@ -724,7 +724,7 @@ $approvalDoneDisplay = 'none';
 							<label class="col-md-2 control-label">Lampiran&nbsp;:</label>
 							<div class='col-md-4'>
 								<input type="file" class="form-control" name="AttachmentReimburse" id="AttachmentReimburse">
-								<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=site_url('download/filename/' . $ArrData['AttachmentReimburse'])?>">See this attachment</a> <?php endif; ?>
+								<?php if($ArrData['AttachmentReimburse']) : ?> <a href="<?=site_url('upload/' . $ArrData['AttachmentReimburse'])?>">See this attachment</a> <?php endif; ?>
 								<?php echo form_error('AttachmentReimburse') ?>
 							</div>
 						</div>

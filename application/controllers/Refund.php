@@ -256,12 +256,10 @@ class Refund extends Parent_Controller
 						$RefundId = uniqid().uniqid();
 
 						if($_FILES['Attachment']['name']) {
-							$newName = 'refund_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
 							$config['upload_path'] = './upload/';
 							$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-							$config['max_size'] = 2000;
-							$config['overwrite'] = TRUE;
-							$config['file_name'] = $newName;
+							$config['max_size'] = 5000;
+							$config['encrypt_name'] = TRUE;
 							$this->load->library('upload', $config);
 	
 							if (!$this->upload->do_upload('Attachment')) 
@@ -292,7 +290,7 @@ class Refund extends Parent_Controller
         	  );
 
 						if($_FILES["Attachment"]['name']) {
-							$dwata['Attachment'] = $newName;
+							$data['Attachment'] = $this->upload->data()['file_name'];
 						}
 
             $exst = $this->GlobalModel->getDataByWhere('trnrefund', array('NoUrut' => $this->input->post('NoUrut',TRUE)));
@@ -337,12 +335,10 @@ class Refund extends Parent_Controller
       if($this->arrAccessMenu['Update']){
 
 				if($_FILES['Attachment']['name']) {
-					$newName = 'refund_attachment_' . time() . '_' . $_FILES["Attachment"]['name'];
 					$config['upload_path'] = './upload/';
 					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-					$config['max_size'] = 2000;
-					$config['overwrite'] = TRUE;
-					$config['file_name'] = $newName;
+					$config['max_size'] = 5000;
+					$config['encrypt_name'] = TRUE;
 					$this->load->library('upload', $config);
 	
 					if (!$this->upload->do_upload('Attachment')) 
@@ -372,7 +368,7 @@ class Refund extends Parent_Controller
     	  );
 
 				if($_FILES['Attachment']['name']) {
-					$data['Attachment'] = $newName;
+					$data['Attachment'] = $this->upload->data()['file_name'];
 				}
 
         if($this->input->post('Approval1Status',TRUE)){

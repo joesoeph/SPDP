@@ -278,12 +278,10 @@ class ProofSpend extends Parent_Controller
             $ProofSpendId = uniqid().uniqid();
 
 						if($_FILES['Attachment']['name']) {
-							$newName = 'proof_spend_attachment_' . $ProofSpendId . '_' . $_FILES["Attachment"]['name'];
 							$config['upload_path'] = './upload/';
 							$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-							$config['max_size'] = 2000;
-							$config['overwrite'] = TRUE;
-							$config['file_name'] = $newName;
+							$config['max_size'] = 5000;
+							$config['encrypt_name'] = TRUE;
 							$this->load->library('upload', $config);
 	
 							if (!$this->upload->do_upload('Attachment')) 
@@ -315,7 +313,7 @@ class ProofSpend extends Parent_Controller
         	  );
 
 						if($_FILES["Attachment"]['name']) {
-							$data['Attachment'] = $newName;
+							$data['Attachment'] = $this->upload->data()['file_name'];
 						}
 
 						if($this->input->post('WithReimburse', TRUE) == 'Y') {
@@ -361,12 +359,10 @@ class ProofSpend extends Parent_Controller
       if($this->arrAccessMenu['Update']){
 
 				if($_FILES['Attachment']['name']) {
-					$newName = 'proof_spend_attachment_' . $Id . '_' . $_FILES["Attachment"]['name'];
 					$config['upload_path'] = './upload/';
 					$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-					$config['max_size'] = 2000;
-					$config['overwrite'] = TRUE;
-					$config['file_name'] = $newName;
+					$config['max_size'] = 5000;
+					$config['encrypt_name'] = TRUE;
 					$this->load->library('upload', $config);
 	
 					if (!$this->upload->do_upload('Attachment')) 
@@ -397,7 +393,7 @@ class ProofSpend extends Parent_Controller
     	  );
 
 				if($_FILES['Attachment']['name']) {
-					$data['Attachment'] = $newName;
+					$data['Attachment'] = $this->upload->data()['file_name'];
 				}
 
 				if($this->input->post('WithReimburse', TRUE) == 'Y') {
@@ -699,12 +695,10 @@ class ProofSpend extends Parent_Controller
 	public function store_upload($Id)
 	{
 		if($this->arrAccessMenu['Update']){
-			$newName = 'proofspend_attachment_reimburse_' . $Id . '_' . $_FILES["AttachmentReimburse"]['name'];
 			$config['upload_path'] = './upload/';
 			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
-			$config['max_size'] = 2000;
-			$config['overwrite'] = TRUE;
-			$config['file_name'] = $newName;
+			$config['max_size'] = 5000;
+			$config['encrypt_name'] = TRUE;
 			$this->load->library('upload', $config);
 
 			if (!$this->upload->do_upload('AttachmentReimburse')) 
@@ -715,7 +709,7 @@ class ProofSpend extends Parent_Controller
 			}
 
 			if($_FILES["AttachmentReimburse"]['name']) {
-				$data['AttachmentReimburse'] = $newName;
+				$data['AttachmentReimburse'] = $this->upload->data()['file_name'];
 			}
 			$this->ProofSpend_model->update($Id, $data);
 

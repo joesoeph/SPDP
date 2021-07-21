@@ -590,12 +590,10 @@ class BudgetRequest extends Parent_Controller
 	public function store_upload($Id)
 	{
 		if($this->arrAccessMenu['Update']){
-			$newName = 'budget_request_attachment_' . $Id . '_' . $_FILES["Attachment"]['name'];
 			$config['upload_path'] = './upload/';
 			$config['allowed_types'] = 'jpg|jpeg|png|pdf';
 			$config['max_size'] = 2000;
-			$config['overwrite'] = TRUE;
-			$config['file_name'] = $newName;
+			$config['encrypt_name'] = TRUE;
 			$this->load->library('upload', $config);
 
 			if (!$this->upload->do_upload('Attachment')) 
@@ -606,7 +604,7 @@ class BudgetRequest extends Parent_Controller
 			}
 
 			if($_FILES["Attachment"]['name']) {
-				$data['Attachment'] = $newName;
+				$data['Attachment'] = $this->upload->data()['file_name'];
 			}
 			$this->BudgetRequest_model->update($Id, $data);
 
